@@ -3,7 +3,11 @@
   "sap.app": {
     "id": "useractivitymonitorapplication",
     "type": "application",
-    "i18n": "i18n/i18n.properties",
+    "i18n": {
+      "bundleUrl": "i18n/i18n.properties",
+      "supportedLocales": ["", "en"],
+      "fallbackLocale": "en"
+    },
     "applicationVersion": {
       "version": "0.0.1"
     },
@@ -27,9 +31,7 @@
         "uri": "/sap/opu/odata4/sap/zapi_user_activity/srvd/sap/zsd_user_activity/0001/",
         "type": "OData",
         "settings": {
-          "annotations": [
-            "annotation"
-          ],
+          "annotations": ["annotation"],
           "localUri": "localService/mainService/metadata.xml",
           "odataVersion": "4.0"
         }
@@ -59,7 +61,9 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.core": {}
+        "sap.fe.core": {},
+        "sap.viz": {},
+        "sap.fe.macros": {}
       }
     },
     "contentDensities": {
@@ -70,21 +74,20 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "useractivitymonitorapplication.i18n.i18n"
+          "bundleName": "useractivitymonitorapplication.i18n.i18n",
+          "supportedLocales": ["", "en"],
+          "fallbackLocale": "en"
         }
       },
       "": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
         "dataSource": "mainService",
         "preload": true,
         "settings": {
           "operationMode": "Server",
-          "autoExpandSelect": true,
-          "earlyRequests": true
+          "synchronizationMode": "None",
+          "groupId": "$direct"
         }
-      },
-      "@i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "uri": "i18n/i18n.properties"
       }
     },
     "resources": {
@@ -108,7 +111,7 @@
             "settings": {
               "navigation": {},
               "contextPath": "/authenticate_data",
-              "viewName": "useractivitymonitorapplication.ext.main.Main"
+              "viewName": "useractivitymonitorapplication.view.Main"
             }
           }
         }
