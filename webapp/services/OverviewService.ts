@@ -57,4 +57,62 @@ export default class OverviewService {
       throw new Error("Failed to load total authentication logs");
     }
   }
+
+  // ====================================================
+  // Call activity_data entity
+  // Data for overview section {total dump log}
+  // ====================================================
+  static async getTotalDump(
+    oModel: ODataModel,
+    aFilters: Filter[],
+  ): Promise<number> {
+    try {
+      const oBinding = oModel.bindList(
+        "/activity_data",
+        undefined,
+        undefined,
+        aFilters,
+        { $count: true },
+      ) as ODataListBinding;
+
+      // Executes the OData call
+      await oBinding.requestContexts();
+
+      return oBinding.getLength();
+    } catch (error) {
+      throw new Error("Failed to load total dump logs");
+    }
+  }
+
+  // ===========================================
+  // Call system_data entity
+  // Data for overview section {system}
+  // ===========================================
+  static async getSystemInfo(oModel: ODataModel): Promise<string> {
+    try {
+      const oBinding = oModel.bindList(
+        "/system_data",
+        undefined,
+        undefined,
+        undefined,
+        { $count: true },
+      ) as ODataListBinding;
+
+      // Executes the OData call
+      const aSystemContexts = await oBinding.requestContexts();
+
+      // Add label
+      const aDataSystem = aSystemContexts.map((oContext) => {
+        const obj = oContext.getObject();
+        return {
+          ...obj,
+          Label: `${obj.userCient} - ${obj.SystemId}`,
+        };
+      });
+
+      return aDataSystem[0].Label;
+    } catch (error) {
+      throw new Error("Failed to load system information");
+    }
+  }
 }

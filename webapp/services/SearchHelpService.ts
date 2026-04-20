@@ -10,7 +10,7 @@ export default class SearchHelpService {
   static async getSHUsernameData(
     oModel: ODataModel,
     aFilters: Filter[],
-  ): Promise<any> {
+  ): Promise<any[]> {
     try {
       const oBinding = oModel.bindList(
         "/searchhelp_username_data",

@@ -17,6 +17,9 @@ import DateFormat from "sap/ui/core/format/DateFormat";
 import Spreadsheet from "sap/ui/export/Spreadsheet";
 import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
 import MessageBox from "sap/m/MessageBox";
+import LoginResultService from "useractivitymonitorapplication/services/LoginResultService";
+import TCodeService from "useractivitymonitorapplication/services/TCodeService";
+import DumpService from "useractivitymonitorapplication/services/DumpService";
 
 /**
  * @namespace useractivitymonitorapplication.controller.main
@@ -53,6 +56,7 @@ export default class Main extends BaseController {
 
     this._bindAuthTable();
     this._loadOverviewData();
+    this._loadChartData();
     this.applyFilters();
   }
 
@@ -93,8 +97,19 @@ export default class Main extends BaseController {
       this.withBusy(async () => {
         this._bindAuthTable();
         await this._loadOverviewData();
+        await this._loadChartData();
       });
     }, 200);
+
+    // Reset Min Max Date after filter global
+    const oDatePicker = this.byId("mainDatePickerId") as DatePicker;
+
+    if (!oDatePicker) return;
+
+    const { from, to } = this.getGlobalDateRange();
+
+    oDatePicker.setMinDate(new Date(from));
+    oDatePicker.setMaxDate(new Date(to));
   }
 
   // ===========================================
@@ -136,26 +151,101 @@ export default class Main extends BaseController {
     const oOverviewModel = this.getView()?.getModel(
       "OverviewData",
     ) as JSONModel;
-    // Get global filter date
+
+    const { from, to } = this.getGlobalDateRange();
+
+    // Filter globlal date
     const aFilters = this.getGlobalDateFilter();
+    // Filter locked user
+    const aLockedFilters = [
+      ...aFilters,
+      new Filter("EventId", FilterOperator.EQ, "AUM"),
+    ];
+    // Filter dump count
+    const aDumpFilters = [
+      new Filter("ActDate", FilterOperator.BT, from, to),
+      new Filter("ActType", FilterOperator.EQ, "DUMP"),
+    ];
 
     try {
-      const [totalUsers, totalLogs] = await Promise.all([
+      const [
+        totalUsers,
+        totalLogs,
+        lockedUsers,
+        loginResultData,
+        totalDumps,
+        systemInfo,
+      ] = await Promise.all([
         // Call fn getTotalUsers
         OverviewService.getTotalUsers(oModel, aFilters),
 
         // Call fn getTotalAuthLogs
         OverviewService.getTotalAuthLogs(oModel, aFilters),
+        OverviewService.getTotalAuthLogs(oModel, aLockedFilters),
+
+        // Call fn getLoginResult
+        LoginResultService.getLoginResult(oModel, aFilters),
+
+        // Call fn getTotalDump
+        OverviewService.getTotalDump(oModel, aDumpFilters),
+
+        // Call fn getSystemInfo
+        OverviewService.getSystemInfo(oModel),
       ]);
 
       // Set property
       oOverviewModel.setProperty("/totalUsers", totalUsers);
       oOverviewModel.setProperty("/totalLogs", totalLogs);
+      oOverviewModel.setProperty("/successLogin", loginResultData.successLogin);
+      oOverviewModel.setProperty("/failedLogin", loginResultData.failedLogin);
+      oOverviewModel.setProperty("/lockedUsers", lockedUsers);
+      oOverviewModel.setProperty("/dumpCount", totalDumps);
+      oOverviewModel.setProperty("/systemInformation", systemInfo);
     } catch (error: any) {
       this.showError(error.message || "Failed to load overview data");
 
       oOverviewModel.setProperty("/totalUsers", 0);
       oOverviewModel.setProperty("/totalLogs", 0);
+      oOverviewModel.setProperty("/lockedUsers", 0);
+      oOverviewModel.setProperty("/dumpCount", 0);
+      oOverviewModel.setProperty("/successLogin", 0);
+      oOverviewModel.setProperty("/failedLogin", 0);
+    }
+  }
+
+  // ===========================================
+  // Load data for chart section
+  // ===========================================
+  public async _loadChartData(): Promise<void> {
+    const oModel = this.getAppComponent().getModel() as ODataModel;
+    // Filter globlal date
+    const aFilters = this.getGlobalDateFilter();
+
+    const { from, to } = this.getGlobalDateRange();
+    const tcodeFilter = [new Filter("ActDate", FilterOperator.BT, from, to)];
+
+    try {
+      const [loginResultData, tcodeData, dumpData] = await Promise.all([
+        // Call fn getLoginResult
+        LoginResultService.getLoginResult(oModel, aFilters),
+
+        // Call fn getLoginResult
+        TCodeService.getTCodeData(oModel, tcodeFilter),
+
+        // Call fn getDumpData
+        DumpService.getDumpData(oModel, tcodeFilter),
+      ]);
+
+      const loginResulJsonModel = new JSONModel(loginResultData.chartData);
+      const tcodeJsonModel = new JSONModel(tcodeData);
+      const dumpJsonModel = new JSONModel(dumpData);
+
+      // Set model
+      this.getView()?.setModel(loginResulJsonModel, "loginResultData");
+      this.getView()?.setModel(tcodeJsonModel, "tcodeData");
+      this.getView()?.setModel(dumpJsonModel, "dumpData");
+    } catch (error: any) {
+      this.showError(error.message || "Failed to load chart data");
     }
   }
 

@@ -72,8 +72,139 @@
                                     <Text id="kpiFailedLabel" text="{i18n>kpiFailedLabel}" />
                                     <ObjectNumber id="kpiFailedValue" number="{OverviewData>/failedLogin}" textAlign="Center" class="sapUiSmallMarginTop" />
                                 </VBox>
+
+                                <!-- LOCKED USERS -->
+                                <VBox id="kpiLockedBox" class="kpiBox kpiDarkRed">
+                                    <core:Icon id="kpiLockedIcon" src="sap-icon://locked" size="1.5rem" />
+                                    <Text id="kpiLockedLabel" text="{i18n>kpiLockedUsersLabel}" />
+                                    <ObjectNumber id="kpiLockedValue" number="{OverviewData>/lockedUsers}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <!-- DUMP COUNT -->
+                                <VBox id="kpiDumpBox" class="kpiBox kpiOrange">
+                                    <core:Icon id="kpiDumpIcon" src="sap-icon://alert" size="1.5rem" />
+                                    <Text id="kpiDumpLabel" text="{i18n>kpiDumpLabel}" />
+                                    <ObjectNumber id="kpiDumpValue" number="{OverviewData>/dumpCount}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <!-- CLIENT + SYSTEM -->
+                                <VBox id="kpiClientBox" class="kpiBox kpiGray">
+                                    <core:Icon id="kpiClientIcon" src="sap-icon://cloud" size="1.5rem" />
+                                    <Text id="kpiClientLabel" text="{i18n>clientSystem}" />
+                                    <ObjectStatus id="kpiClientValue" text="{OverviewData>/systemInformation}" class="sapUiSmallMarginTop" />
+                                </VBox>
                             </HBox>
                         </VBox>
+
+                        <!-- CHART -->
+                        <HBox id="hBoxChartContent" class="sapUiSmallMarginBottom" justifyContent="SpaceAround">
+                            <!-- LOGIN RESULT - COLUMN CHART -->
+                            <viz:VizFrame vizProperties="{
+                                title: { visible: true, text: 'User Login Result Overview' },
+                                legend: { visible: false },
+                                plotArea: {
+                                    dataLabel: { visible: true },
+                                    dataPointStyle: {
+                                        rules: [
+                                            {
+                                                dataContext: { Status: 'FAIL' },
+                                                properties: { color: '#ff4d4f' }
+                                            },
+                                            {
+                                                dataContext: { Status: 'SUCCESS' },
+                                                properties: { color: '#52c41a' }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }" id="loginChart" vizType="column" width="300px" height="364px">
+                                <!-- Define data of chart -->
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset id="colmunDataset" data="{loginResultData>/}">
+                                        <!-- Category  -->
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition id="colmunDimensionStatus" name="Status" value="{LoginResult}" />
+                                        </viz.data:dimensions>
+
+                                        <!-- Value -->
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition id="colmunMeasureCount" name="Count" value="{CountLoginLog}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+
+                                <!-- Mapping dimension/measure into chart -->
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem id="colmunFeedCategory" uid="categoryAxis" type="Dimension" values="Status" />
+                                    <viz.feeds:FeedItem id="colmunFeedValue" uid="valueAxis" type="Measure" values="Count" />
+                                </viz:feeds>
+                            </viz:VizFrame>
+
+                            <!-- TCODE USAGE - PIE CHART -->
+                            <viz:VizFrame vizProperties="{
+                                title: { visible: true, text: 'Top 5 TCode Usage' },
+                                plotArea: {
+                                    dataLabel: {
+                                        visible: true,
+                                        type: 'percentage',
+                                        hideWhenOverlap: true
+                                    }
+                                }
+                            }" id="tcodeChart" vizType="pie" width="500px" height="364px">
+                                <!-- Define data of chart -->
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset id="pieDataset" data="{tcodeData>/}">
+                                        <!-- Category -->
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition id="pieDimension" name="Label" value="{Label}" />
+                                        </viz.data:dimensions>
+
+                                        <!-- Value  -->
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition id="pieMeasureCount" name="Usage" value="{TCodeCount}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+
+                                <!-- Mapping dimension/measure into chart -->
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem id="pieFeedMeasure" uid="size" type="Measure" values="Usage" />
+                                    <viz.feeds:FeedItem id="pieFeedValue" uid="color" type="Dimension" values="Label" />
+                                </viz:feeds>
+                            </viz:VizFrame>
+
+                            <!-- DUMP - BAR CHART -->
+                            <viz:VizFrame id="dumpChart" vizProperties="{
+                                title: { visible: true, text: 'Top 10 Users by Dump Count' },
+                                legend: { visible: false },
+                                plotArea: {
+                                    dataLabel: { visible: true },
+                                    colorPalette: ['#fa8c16']
+                                }
+                            }" vizType="bar" width="300px" height="364px">
+                                <!-- Define data of chart -->
+                                <viz:dataset>
+                                    <viz.data:FlattenedDataset id="barDataset" data="{dumpData>/}">
+                                        <!-- Category -->
+                                        <viz.data:dimensions>
+                                            <viz.data:DimensionDefinition id="barDimension" name="{i18n>user}" value="{Username}" />
+                                        </viz.data:dimensions>
+
+                                        <!-- Value  -->
+                                        <viz.data:measures>
+                                            <viz.data:MeasureDefinition id="barMeasureCount" name="{i18n>dumpCount}" value="{DumpCount}" />
+                                        </viz.data:measures>
+                                    </viz.data:FlattenedDataset>
+                                </viz:dataset>
+
+                                <!-- Mapping dimension/measure into chart -->
+                                <viz:feeds>
+                                    <viz.feeds:FeedItem id="barFeedMeasure" uid="categoryAxis" type="Dimension" values="User" />
+
+                                    <viz.feeds:FeedItem id="barFeedValue" uid="valueAxis" type="Measure" values="Dump Count" />
+                                </viz:feeds>
+                            </viz:VizFrame>
+                        </HBox>
                     </content>
                 </Panel>
 
