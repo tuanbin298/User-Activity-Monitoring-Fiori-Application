@@ -14,6 +14,9 @@ import Input from "sap/m/Input";
 import Select from "sap/m/Select";
 import DatePicker from "sap/m/DatePicker";
 import DateFormat from "sap/ui/core/format/DateFormat";
+import Spreadsheet from "sap/ui/export/Spreadsheet";
+import ODataListBinding from "sap/ui/model/odata/v4/ODataListBinding";
+import MessageBox from "sap/m/MessageBox";
 
 /**
  * @namespace useractivitymonitorapplication.controller.main
@@ -23,6 +26,7 @@ export default class Main extends BaseController {
 
   private _timer: any;
   private _oUserSearchHelpDialog: Dialog | null = null;
+  private _oViewSettingsDialog: Dialog | null = null;
   private _aUserDateFilters: Filter[] = [];
 
   // ===========================================
@@ -227,21 +231,25 @@ export default class Main extends BaseController {
   // ===========================================
   // Apply filter to table
   // ===========================================
-  public applyFilters(): void {
+  public async applyFilters(): Promise<void> {
     const oTable = this.byId("MaiTableId") as Table;
-    const oBinding = oTable.getBinding("rows") as any;
+    const oBinding = oTable.getBinding("rows") as ODataListBinding;
+
     oTable.setBusy(true);
 
-    // Call fn _buildFilters
-    const aFilters = this._buildFilters();
+    try {
+      const aFilters = this._buildFilters();
 
-    if (oBinding) {
-      oBinding.filter(aFilters);
-    }
+      if (oBinding) {
+        oBinding.filter(aFilters);
 
-    setTimeout(() => {
+        await oBinding.requestContexts();
+      }
+    } catch (error) {
+      this.showError("Failed to filter data");
+    } finally {
       oTable.setBusy(false);
-    }, 300);
+    }
   }
 
   // ===========================================
@@ -289,5 +297,148 @@ export default class Main extends BaseController {
         : this.getGlobalDateFilter();
 
     return [...aDateFilters, ...aFilters];
+  }
+
+  // ===========================================
+  // Open fragment view setting
+  // ===========================================
+  public async onOpenViewSettings(): Promise<void> {
+    if (!this._oViewSettingsDialog) {
+      // Load fragment
+      this._oViewSettingsDialog = (await Fragment.load({
+        id: this.getView()?.getId(),
+        name: "useractivitymonitorapplication.fragment.AuthTableViewSetting",
+        controller: this,
+      })) as Dialog;
+
+      // Add Fragment into view
+      this.getView()?.addDependent(this._oViewSettingsDialog);
+
+      this.initializeColumnModel();
+    }
+
+    // Open
+    this._oViewSettingsDialog.open();
+  }
+
+  // ===========================================
+  // Init view
+  // ===========================================
+  public initializeColumnModel(): void {
+    // Get table and its colums
+    const oTable = this.byId("MaiTableId") as any;
+    const aColumns = oTable.getColumns();
+
+    // Remove Navigator column
+    const aFilteredColumns = aColumns.filter(
+      (oColumn: any) => !oColumn.getId().includes("columnNavigator"),
+    );
+
+    // Create new array contain every column object
+    const aColumnData = aFilteredColumns.map((oColumn: any) => {
+      const oLabel = oColumn.getLabel();
+
+      return {
+        id: oColumn.getId(),
+        label: oLabel ? oLabel.getText() : oColumn.getId(),
+        visible: oColumn.getVisible(),
+      };
+    });
+
+    // Create JSONModel, property columns
+    const oModel = new JSONModel({
+      columns: aColumnData,
+    });
+
+    this.getView()?.setModel(oModel, "columnsModel");
+  }
+
+  // ===========================================
+  // Confirm view of auth table
+  // ===========================================
+  public onConfirmViewSettings(): void {
+    // Get table and its colums
+    const oTable = this.byId("MaiTableId") as any;
+    const aColumns = oTable.getColumns();
+
+    // Get model and property
+    const oModel = this.getView()?.getModel("columnsModel") as JSONModel;
+    const aData = oModel.getProperty("/columns");
+
+    // Set visible for column
+    aColumns.forEach((oColumn: any) => {
+      const oMatch = aData.find((column: any) => column.id === oColumn.getId());
+
+      if (oMatch) {
+        oColumn.setVisible(oMatch.visible);
+      }
+    });
+
+    this._oViewSettingsDialog?.close();
+  }
+
+  public onCancelViewSettings(): void {
+    this._oViewSettingsDialog?.close();
+  }
+
+  // ===========================================
+  // Export data
+  // ===========================================
+  public onExportExcel(): void {
+    const { from, to } = this.getGlobalDateRange();
+
+    const sFileName = `UserAuthenticationLogs_${from}_to_${to}.xlsx`;
+
+    MessageBox.confirm("Do you want to export this data to Excel?", {
+      title: "Confirm Export",
+      actions: ["YES", "NO"],
+      emphasizedAction: "YES",
+
+      onClose: (oAction: string | null) => {
+        if (oAction === "YES") {
+          // Get table and its OData list binding
+          const oTable = this.byId("MaiTableId");
+          const oBinding = oTable?.getBinding("rows") as ODataListBinding;
+          // Format in Excel
+          const aCols = [
+            { label: "User Session", property: "SessionId", width: 25 },
+            { label: "User Name", property: "Username", width: 15 },
+            { label: "Login Result", property: "LoginResult", width: 10 },
+            { label: "Login Date", property: "LoginDate", width: 15 },
+            { label: "Login Time", property: "LoginTime", width: 15 },
+            { label: "Login Message", property: "LoginMessage", width: 150 },
+            { label: "Logout Date", property: "LogoutDate", width: 15 },
+            { label: "Logout Time", property: "LogoutTime", width: 15 },
+            { label: "Event ID", property: "EventId", width: 10 },
+            { label: "System ID", property: "SystemId", width: 10 },
+            { label: "Terminal ID", property: "TerminalId", width: 15 },
+          ];
+
+          // Spreadsheet config
+          const oSettings = {
+            workbook: { columns: aCols },
+            dataSource: oBinding,
+            fileName: sFileName,
+            worker: false,
+          };
+
+          // Spreadsheet config
+          const oSheet = new Spreadsheet(oSettings);
+
+          // Create Excel file and download it
+          oSheet
+            .build()
+            .then(() => {
+              this.showSuccess("Export successful!");
+            })
+            .catch(() => {
+              this.showError("Export failed.");
+            })
+            .finally(() => {
+              oSheet.destroy();
+            });
+        }
+      },
+    });
   }
 }
