@@ -34,8 +34,87 @@
         <!-- MAIN CONTENT -->
         <f:content>
             <VBox id="MainContent">
+                <Panel id="overviewPanel" headerText="{i18n>overviewDashboard}" expandable="true" expanded="true" class="customOverviewPanel sapUiMediumMarginBottom">
+                    <content>
+                        <VBox id="kpiContainer" class="sapUiSmallMarginTop sapUiMediumMarginBottom">
+                            <!-- TITLE + DESCRIPTION -->
+                            <VBox id="kpiHeaderBox" class="sapUiSmallMarginBottom">
+                                <Title id="kpiTitle" text="{i18n>kpiTitle}" level="H4" />
+                                <Text id="kpiDescription" text="{i18n>kpiDescription}" wrapping="true" />
+                            </VBox>
+
+                            <!-- KPI BAR -->
+                            <HBox id="kpiHBox" justifyContent="Center" wrap="Wrap" class="sapUiSmallMarginTop">
+                                <!-- TOTAL USERS -->
+                                <VBox id="kpiTotalUsersBox" class="kpiBox kpiBlue">
+                                    <core:Icon id="kpiTotalUsersIcon" src="sap-icon://group" size="1.5rem" />
+                                    <Text id="kpiTotalUsersLabel" text="{i18n>kpiTotalUsersLabel}" />
+                                    <ObjectNumber id="kpiTotalUsersValue" number="{OverviewData>/totalUsers}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <!-- TOTAL LOG -->
+                                <VBox id="kpiTotalLogBox" class="kpiBox kpiPurple">
+                                    <core:Icon id="kpiTotalLogIcon" src="sap-icon://activity-items" size="1.5rem" />
+                                    <Text id="kpiTotalLogLabel" text="{i18n>kpiTotalLogLabel}" />
+                                    <ObjectNumber id="kpiTotalLogValue" number="{OverviewData>/totalLogs}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <!-- SUCCESS LOGIN -->
+                                <VBox id="kpiSuccessBox" class="kpiBox kpiGreen">
+                                    <core:Icon id="kpiSuccessIcon" src="sap-icon://accept" size="1.5rem" />
+                                    <Text id="kpiSuccessLabel" text="{i18n>kpiSuccessLabel}" />
+                                    <ObjectNumber id="kpiSuccessValue" number="{OverviewData>/successLogin}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+
+                                <!-- FAILED LOGIN -->
+                                <VBox id="kpiFailedBox" class="kpiBox kpiRed">
+                                    <core:Icon id="kpiFailedIcon" src="sap-icon://decline" size="1.5rem" />
+                                    <Text id="kpiFailedLabel" text="{i18n>kpiFailedLabel}" />
+                                    <ObjectNumber id="kpiFailedValue" number="{OverviewData>/failedLogin}" textAlign="Center" class="sapUiSmallMarginTop" />
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </content>
+                </Panel>
+
+                <!-- FILTER + SEARCH -->
+                <Panel id="filterPanel" width="100%" headerText="{i18n>filter}" expandable="true" expanded="true" class="customFilterPanel sapUiSmallMarginBottom">
+                    <Toolbar id="filterToolbarMain" design="Transparent">
+                        <!-- USER -->
+                        <Label id="filterLabelUser" text="{i18n>user}" class="sapUiSmallMarginEnd" />
+                        <Input id="userSearchId" width="250px" placeholder="{i18n>searchUser}" showValueHelp="true" liveChange="onSearchUserName" valueHelpRequest="onUserSearchHelp" showClearIcon="true" class="sapUiSmallMarginEnd" />
+
+                        <!-- STATUS -->
+                        <Label id="filterLabelStatus" text="{i18n>status}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+                        <Select id="MainDropdown" width="180px" change="onFilterStatus" class="sapUiSmallMarginEnd">
+                            <core:Item id="filterStatusItemAll" key="" text="{i18n>all}" />
+                            <core:Item id="filterStatusItemSuccess" key="SUCCESS" text="{i18n>success}" />
+                            <core:Item id="filterStatusItemFail" key="FAIL" text="{i18n>failed}" />
+                        </Select>
+
+                        <!-- DATE -->
+                        <Label id="filterLabelDate" text="{i18n>filterDate}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+                        <DatePicker id="mainDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterLoginDate" />
+                    </Toolbar>
+                </Panel>
+
                 <!-- TABLE -->
                 <ui:Table id="MaiTableId" selectionMode="Single" class="sapUiLargeMarginBottom" visibleRowCount="10">
+                    <!-- BUTTON -->
+                    <ui:extension>
+                        <OverflowToolbar id="mainToolbarId">
+                            <Title id="mainTitleTableId" text="{= ${i18n>headerTitleTable} + ' (' + ${OverviewData>/totalLogs} + ')' }" level="H2" />
+
+                            <ToolbarSpacer id="mainToolSpace" />
+
+                            <!-- EXPORT BTN -->
+                            <Button id="btnExportExcel" icon="sap-icon://excel-attachment" tooltip="{i18n>exportExcel}" press="onExportExcel" />
+
+                            <!-- VIEW SETTINGS BTN -->
+                            <Button id="btnViewSettings" icon="sap-icon://action-settings" tooltip="{i18n>viewSettings}" press="onOpenViewSettings" />
+                        </OverflowToolbar>
+                    </ui:extension>
+
                     <ui:columns>
                         <!-- SESSION ID COLUMN -->
                         <ui:Column id="columnSession" width="12rem" sortProperty="SessionId" tooltip="{i18n>introSort}">
@@ -47,7 +126,7 @@
                         </ui:Column>
 
                         <!-- USERNAME COLUMN -->
-                        <ui:Column id="columnName" width="10rem" sortProperty="Username" tooltip="{i18n>introSort}">
+                        <ui:Column id="columnName" width="7rem" sortProperty="Username" tooltip="{i18n>introSort}">
                             <Label id="labelName" text="{i18n>username}" />
 
                             <ui:template>
@@ -59,7 +138,7 @@
                         </ui:Column>
 
                         <!-- LOGIN RESULT COLUMN -->
-                        <ui:Column id="columnLoginResult" width="9rem" sortProperty="LoginResult" filterProperty="LoginResult" tooltip="{i18n>introSort}">
+                        <ui:Column id="columnLoginResult" width="7rem" sortProperty="LoginResult" filterProperty="LoginResult" tooltip="{i18n>introSort}">
                             <Label id="labelLoginResult" text="{i18n>loginResult}" />
 
                             <ui:template>
@@ -68,7 +147,7 @@
                         </ui:Column>
 
                         <!-- LOGIN DATE COLUMN -->
-                        <ui:Column id="columnLoginDate" width="9rem" sortProperty="LoginDate" tooltip="{i18n>introSort}">
+                        <ui:Column id="columnLoginDate" width="7rem" sortProperty="LoginDate" tooltip="{i18n>introSort}">
                             <Label id="labelLoginDate" text="{i18n>loginDate}" />
 
                             <ui:template>
@@ -86,7 +165,7 @@
                         </ui:Column>
 
                         <!-- LOGIN MESSAGE COLUMN -->
-                        <ui:Column id="columnLoginMessage" width="18rem">
+                        <ui:Column id="columnLoginMessage" width="16rem">
                             <Label id="labelLoginMessage" text="{i18n>loginMessage}" />
 
                             <ui:template>
@@ -95,7 +174,7 @@
                         </ui:Column>
 
                         <!-- LOGOUT DATE COLUMN -->
-                        <ui:Column id="columnLogoutDate" width="9rem" sortProperty="LogoutDate" tooltip="{i18n>introSort}">
+                        <ui:Column id="columnLogoutDate" width="7rem" sortProperty="LogoutDate" tooltip="{i18n>introSort}">
                             <Label id="labelLogoutDate" text="{i18n>logoutDate}" />
 
                             <ui:template>
@@ -109,6 +188,24 @@
 
                             <ui:template>
                                 <Text id="textLogoutTime" text="{path:'LogoutTime', formatter: '.formatter.formatLogoutTime'}" />
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- SYSTEM COLUMN -->
+                        <ui:Column id="columnSystem" width="4rem" sortProperty="SystemId" tooltip="{i18n>introSort}">
+                            <Label id="labelSystem" text="{i18n>systemId}" />
+
+                            <ui:template>
+                                <Text id="textSystem" text="{SystemId}" />
+                            </ui:template>
+                        </ui:Column>
+
+                        <!-- TERMINAL COLUMN -->
+                        <ui:Column id="columnTerminal" width="7rem" sortProperty="TerminalId" tooltip="{i18n>introSort}">
+                            <Label id="labelTerminal" text="{i18n>terminalId}" />
+
+                            <ui:template>
+                                <Text id="textTerminal" text="{TerminalId}" />
                             </ui:template>
                         </ui:Column>
 

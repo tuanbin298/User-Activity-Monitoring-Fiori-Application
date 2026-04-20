@@ -20,9 +20,9 @@ export default class BaseController extends Controller {
     return this.getAppComponent().getModel("globalFilterDate") as JSONModel;
   }
 
-  // =========================
+  // ====================================================
   // GET Global Date | Apply Global Date into Filter
-  // =========================
+  // ====================================================
   public getGlobalDateRange() {
     const oGlobalModel = this.getGlobalModel();
 
