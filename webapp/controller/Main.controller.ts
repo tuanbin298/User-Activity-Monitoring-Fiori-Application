@@ -531,4 +531,25 @@ export default class Main extends BaseController {
       },
     });
   }
+
+  // ===========================================
+  // Navigate to AuthDetail
+  // ===========================================
+  public onPressNavigate(oEvent: any): void {
+    // Get control and BindingContext of line
+    const oItem = oEvent.getSource();
+    const oContext = oItem.getBindingContext();
+
+    if (oContext) {
+      const sSessionId = oContext.getProperty("SessionId");
+
+      // Navigate with parameter session_id
+      const oRouter = (this as any).getAppComponent().getRouter();
+      if (oRouter) {
+        oRouter.navTo("AuthDetail", {
+          key: sSessionId,
+        });
+      }
+    }
+  }
 }

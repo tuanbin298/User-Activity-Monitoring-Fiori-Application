@@ -98,12 +98,23 @@
       ]
     },
     "routing": {
-      "config": {},
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "controlAggregation": "pages",
+        "controlId": "appContent",
+        "async": true
+      },
       "routes": [
         {
           "name": "authenticate_dataMain",
           "pattern": ":?query:",
           "target": "authenticate_dataMain"
+        },
+        {
+          "name": "AuthDetail",
+          "pattern": "AuthDetail({key}):?query:",
+          "target": "AuthDetail"
         }
       ],
       "targets": {
@@ -116,6 +127,17 @@
               "navigation": {},
               "contextPath": "/authenticate_data",
               "viewName": "useractivitymonitorapplication.view.Main"
+            }
+          }
+        },
+        "AuthDetail": {
+          "type": "Component",
+          "id": "AuthDetail",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "contextPath": "/authenticate_data",
+              "viewName": "useractivitymonitorapplication.view.AuthDetail"
             }
           }
         }

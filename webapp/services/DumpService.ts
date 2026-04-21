@@ -27,7 +27,7 @@ export default class DumpService {
       ) as ODataListBinding;
 
       const aData = await BaseService._fetchAllData(oBinding);
-      debugger;
+
       // Group by + SUM data
       aData.forEach((oContext) => {
         const key = oContext.Username;
