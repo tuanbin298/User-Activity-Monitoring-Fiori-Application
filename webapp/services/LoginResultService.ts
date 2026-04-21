@@ -49,4 +49,47 @@ export default class LoginResultService {
       throw new Error("Failed to load login result chart");
     }
   }
+
+  // ===========================================
+  // Call login_result_data entity
+  // Data for login result line chart
+  // ===========================================
+  static async getLoginPerDay(
+    oModel: ODataModel,
+    aFilters: Filter[],
+  ): Promise<any[]> {
+    try {
+      const oLogUserPerDay = {} as any;
+
+      const oBinding = oModel.bindList(
+        "/login_result_data",
+        undefined,
+        undefined,
+        aFilters,
+        { $count: true, $orderby: "LoginDate asc" },
+      ) as ODataListBinding;
+
+      const aData = await BaseService._fetchAllData(oBinding);
+
+      aData.forEach((oContext) => {
+        const key = oContext.LoginDate;
+
+        if (!oLogUserPerDay[key]) {
+          oLogUserPerDay[key] = {
+            LoginDate: oContext.LoginDate,
+            CountLoginLog: 0,
+          };
+        }
+
+        oLogUserPerDay[key].CountLoginLog += oContext.CountLoginLog;
+      });
+
+      //  Convert into array
+      let aLogUserPerDay = Object.values(oLogUserPerDay);
+
+      return aLogUserPerDay;
+    } catch (error) {
+      throw new Error("Failed to load login per day chart");
+    }
+  }
 }

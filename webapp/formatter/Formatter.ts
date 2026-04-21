@@ -67,6 +67,49 @@ const Formatter = {
 
     return oTime;
   },
+
+  // Format Lock
+  formatTextLockStatus: function (sValue: string): string {
+    return sValue === "0" ? "Active" : "Locked";
+  },
+
+  formatTextLockState: function (sValue: string): string {
+    return sValue === "0" ? "Success" : "Error";
+  },
+
+  formatTextLockIcon: function (sValue: string): string {
+    return sValue === "0" ? "sap-icon://accept" : "sap-icon://locked";
+  },
+
+  // Format Activity Type
+  formatActivityType: function (sAct: string): string {
+    if (sAct === "DUMP") {
+      return "sap-icon://alert";
+    } else {
+      return "sap-icon://activity-2";
+    }
+  },
+
+  // Format Activity State
+  formatActivityState: function (sAct: string): string {
+    switch (sAct) {
+      case "DUMP":
+        return "Error";
+      case "TCODE":
+        return "Success";
+      default:
+        return "None";
+    }
+  },
+
+  // Format TCode Icon
+  formatTCodeIcon: function (sAct: string): string {
+    if (sAct === "") {
+      return "";
+    } else {
+      return "sap-icon://customer-and-contacts";
+    }
+  },
 };
 
 export default Formatter;

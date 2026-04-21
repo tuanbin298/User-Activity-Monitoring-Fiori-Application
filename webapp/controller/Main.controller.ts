@@ -229,7 +229,7 @@ export default class Main extends BaseController {
         // Call fn getLoginResult
         LoginResultService.getLoginResult(oModel, aFilters),
 
-        // Call fn getLoginResult
+        // Call fn getTCodeData
         TCodeService.getTCodeData(oModel, tcodeFilter),
 
         // Call fn getDumpData
@@ -348,7 +348,7 @@ export default class Main extends BaseController {
   private _buildFilters(): Filter[] {
     const aFilters: Filter[] = [];
 
-    //  Username search
+    // Username search
     const sSearch = (this.byId("userSearchId") as Input).getValue();
     if (sSearch) {
       aFilters.push(new Filter("Username", FilterOperator.Contains, sSearch));
@@ -489,6 +489,7 @@ export default class Main extends BaseController {
           // Get table and its OData list binding
           const oTable = this.byId("MaiTableId");
           const oBinding = oTable?.getBinding("rows") as ODataListBinding;
+
           // Format in Excel
           const aCols = [
             { label: "User Session", property: "SessionId", width: 25 },
@@ -548,6 +549,27 @@ export default class Main extends BaseController {
       if (oRouter) {
         oRouter.navTo("AuthDetail", {
           key: sSessionId,
+        });
+      }
+    }
+  }
+
+  // ===========================================
+  // Navigate to UserDetail
+  // ===========================================
+  public onNavigateUserDetail(oEvent: any): void {
+    // Get control and BindingContext of line
+    const oItem = oEvent.getSource();
+    const oContext = oItem.getBindingContext();
+
+    if (oContext) {
+      const sUsername = oContext.getProperty("Username");
+
+      // Navigate with parameter username
+      const oRouter = (this as any).getAppComponent().getRouter();
+      if (oRouter) {
+        oRouter.navTo("UserDetail", {
+          username: sUsername,
         });
       }
     }

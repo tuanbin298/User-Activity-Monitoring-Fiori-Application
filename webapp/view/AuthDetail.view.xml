@@ -120,10 +120,9 @@
             <!-- ACTIVITY SECTIONS -->
             <f:ObjectPageSection id="SectionActivity" title="{i18n>activityLog}">
                 <f:subSections>
-                    <f:ObjectPageSubSection id="SubSectionActivity">
+                    <f:ObjectPageSubSection id="SubSectionActivity" class="sapUiMediumMarginBottom">
 
-                        <VBox id="ActivityVBox" class="sapUiMediumMarginTop">
-
+                        <VBox id="ActivityVBox" class="sapUiMediumMarginTop ">
                             <!-- FILTER TOOLBAR -->
                             <Panel id="activityFilterPanel" width="100%" headerText="{i18n>filter}" expandable="true" expanded="true" class="customFilterPanel sapUiSmallMarginBottom">
                                 <Toolbar id="ActivityFilterToolbar" class="sapUiSmallMarginBottom" design="Transparent">
@@ -174,7 +173,7 @@
                                         <Label id="LabelActivityType" text="{i18n>activityType}" />
 
                                         <ui:template>
-                                            <ObjectStatus id="ObjectStatusActivityType" text="{detailData>ActType}" icon="{path:'detailData>ActivityType', formatter: '.formatter.formatActivityType'}" state="{path:'detailData>ActivityType', formatter: '.formatter.formatActivityState'}" />
+                                            <ObjectStatus id="ActivityTypeStatusId" text="{detailData>ActType}" icon="{path:'detailData>ActType', formatter:'.formatter.formatActivityType'}" state="{path:'detailData>ActType', formatter:'.formatter.formatActivityState'}" />
                                         </ui:template>
                                     </ui:Column>
 
@@ -183,7 +182,7 @@
                                         <Label id="LabelTCode" text="{i18n>tCode}" />
 
                                         <ui:template>
-                                            <ObjectStatus id="ObjectStatusTCode" text="{detailData>Tcode}" icon="{path:'detailData>TCode', formatter: '.formatter.formatTCodeIcon'}" />
+                                            <ObjectStatus id="ActivityTCodeStatusId" text="{detailData>Tcode}" icon="{path:'detailData>Tcode', formatter:'.formatter.formatTCodeIcon'}" />
                                         </ui:template>
                                     </ui:Column>
 
@@ -227,7 +226,7 @@
                                     <ui:Column id="ColumnNavId" width="4rem" hAlign="Center">
                                         <Label id="ActivitySentMaileColumnLabel" text="{i18n>sentMailAlert}" />
                                         <ui:template>
-                                            <core:Icon id="ActivitySentMailId" src="{= ${detailData>MailSent} ? 'sap-icon://email' : 'sap-icon://less'}" color="{= ${detailData>mail_sent} ? 'Positive' : 'Neutral'}" size="1.5rem" />
+                                            <core:Icon id="ActivitySentMailId" src="{= ${detailData>MailSent} ? 'sap-icon://email' : 'sap-icon://less'}" color="{= ${detailData>MailSent} ? 'Positive' : 'Neutral'}" tooltip="{= ${detailData>MailSent} ? 'Send Mail Alert' : 'None'}" size="1.5rem" />
                                         </ui:template>
                                     </ui:Column>
                                 </ui:columns>

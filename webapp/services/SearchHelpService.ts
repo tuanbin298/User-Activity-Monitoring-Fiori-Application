@@ -30,4 +30,33 @@ export default class SearchHelpService {
       throw new Error("Failed to load search help username data");
     }
   }
+
+  // ===========================================
+  // Call searchhelp_tcode_data entity
+  // ===========================================
+  static async getSHTCodeData(
+    oModel: ODataModel,
+    aFilters: Filter[],
+  ): Promise<any[]> {
+    try {
+      const oBinding = oModel.bindList(
+        "/searchhelp_tcode_data",
+        undefined,
+        undefined,
+        aFilters,
+        { $count: true },
+      ) as ODataListBinding;
+
+      const aData = await BaseService._fetchAllData(oBinding);
+
+      // Group unique tcode
+      const aTCode = Array.from(new Set(aData.map((item) => item.Tcode))).map(
+        (item) => ({ Tcode: item }),
+      );
+
+      return aTCode;
+    } catch (error) {
+      throw new Error("Failed to load search help Tcode data");
+    }
+  }
 }

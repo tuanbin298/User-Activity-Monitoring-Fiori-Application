@@ -8,7 +8,7 @@
                         path: 'TCodeSeachHelp>/'
                     }" selectionChange="onTCodeSelect">
 
-                    <StandardListItem id="TCodeStandardListItem" title="{TCodeSeachHelp>TCode}" />
+                    <StandardListItem id="TCodeStandardListItem" title="{TCodeSeachHelp>Tcode}" />
                 </List>
             </VBox>
         </content>

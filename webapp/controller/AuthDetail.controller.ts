@@ -22,7 +22,7 @@ export default class AuthDetail extends BaseController {
   // Called when the controller is initialized.
   // ===========================================
   public onInit(): void {
-    // super.onInit();
+    super.onInit();
 
     const oRouter = (this as any).getAppComponent().getRouter();
     if (oRouter) {
@@ -126,7 +126,7 @@ export default class AuthDetail extends BaseController {
           const sTCode = oAct.Tcode;
           if (sTCode && !oTCodeSearchHelpData[sTCode]) {
             oTCodeSearchHelpData[sTCode] = {
-              TCode: sTCode,
+              Tcode: sTCode,
             };
           }
         });
