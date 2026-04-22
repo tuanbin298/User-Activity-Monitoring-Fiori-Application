@@ -42,7 +42,7 @@
                     <Text id="TextClient" text="{detailData>/UserClient}" />
 
                     <Label id="LabelSystem" text="{i18n>system}" design="Bold" class="sapUiSmallMarginTop" />
-                    <Text id="TextSyste" text="{detailData>/UserSystem}" />
+                    <Text id="TextSyste" text="{detailData>/SystemId}" />
                 </VBox>
             </HBox>
         </f:headerContent>
