@@ -473,14 +473,6 @@
                                                 <Text id="ActivityTimeTextId" text="{ActTims}" />
                                             </ui:template>
                                         </ui:Column>
-
-                                        <!-- SENT MAIL -->
-                                        <ui:Column id="ActivityNavigateColumnId" width="4rem" hAlign="Center">
-                                            <Label id="ActivitySentMaileColumnLabelId" text="{i18n>sentMailAlert}" />
-                                            <ui:template>
-                                                <core:Icon id="ActivitySentMail" src="{= ${MailSent} ? 'sap-icon://email' : 'sap-icon://less' }" color="{= ${MailSent} ? 'Positive' : 'Neutral' }" tooltip="{= ${MailSent} ? 'Send Mail Alert' : 'None'}" size="1.5rem" />
-                                            </ui:template>
-                                        </ui:Column>
                                     </ui:columns>
                                 </ui:Table>
                             </VBox>
