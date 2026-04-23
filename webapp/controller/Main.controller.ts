@@ -336,7 +336,7 @@ export default class Main extends BaseController {
         await oBinding.requestContexts();
       }
     } catch (error) {
-      this.showError("Failed to filter data");
+      // this.showError("Failed to filter data");
     } finally {
       oTable.setBusy(false);
     }

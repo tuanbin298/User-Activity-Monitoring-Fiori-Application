@@ -218,7 +218,7 @@
 
                                         <!-- DATE -->
                                         <Label id="AuthDateLabelId" text="{i18n>filterDate}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
-                                        <DatePicker id="AuthDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterAuthLoginDate" class="sapUiSmallMarginEnd" />
+                                        <DatePicker id="AuthDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterAuthLoginDate" class="sapUiSmallMarginEnd" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd"/>
                                     </Toolbar>
                                 </content>
                             </Panel>
@@ -396,7 +396,7 @@
 
                                         <!-- Date -->
                                         <Label id="ActivityDateLabelId" text="{i18n>activityDate}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                        <DatePicker id="ActivityDatePickerId" width="150px" placeholder="{i18n>selectDate}" change="onFilterActivity" />
+                                        <DatePicker id="ActivityDatePickerId" width="150px" placeholder="{i18n>selectDate}" change="onFilterActivity" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd"/>
                                     </Toolbar>
                                 </Panel>
 
