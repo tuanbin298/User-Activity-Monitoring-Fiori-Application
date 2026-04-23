@@ -1,3 +1,45 @@
+# 📊 User Activity Monitor Application
+
+Frontend application for the **User Activity Monitoring System** built with **SAPUI5**, **TypeScript**, and **OData V4**.
+
+This application allows administrators to monitor user activities such as authentication attempts, login failures, session activity times, and email alerts through dashboards, charts, and tables.
+
+---
+
+## 🚀 Tech Stack
+
+- SAPUI5
+- TypeScript
+- OData V4
+- SAP Fiori Elements / Custom Page V4
+- VizFrame Charts
+- Fragment Dialog
+- MVC Architecture
+
+---
+
+## 🧩 Main Features
+
+### 👤 User Monitoring
+- View user details
+- Monitor user activity history
+
+### 🔐 Authentication Tracking
+- View authentication logs
+- Success / Failed login statistics
+
+### 📈 Dashboard & Analytics
+- Activity charts
+- Authentication charts
+- Global date filter
+- Summary statistics
+
+### 📧 Email / Alert Monitoring
+- View sent mail logs
+- Monitor alert notifications
+
+---
+
 ## Application Details
 |               |
 | ------------- |
@@ -17,26 +59,15 @@
 |**Add Eslint configuration**<br>False|
 |**Main Entity**<br>authenticate_data|
 
-## user_activity_monitor_application
-
-User Activity Monitor Application
+---
 
 ### Starting the generated app
 
 -   This app has been generated using the SAP Fiori tools - App Generator, as part of the SAP Fiori tools suite.  To launch the generated application, run the following from the generated application root folder:
 
 ```
-    npm start
+    npm run start
 ```
 
-- It is also possible to run the application using mock data that reflects the OData Service URL supplied during application generation.  In order to run the application with Mock Data, run the following from the generated app root folder:
-
-```
-    npm run start-mock
-```
-
-#### Pre-requisites:
-
-1. Active NodeJS LTS (Long Term Support) version and associated supported NPM version.  (See https://nodejs.org)
 
 
