@@ -19,12 +19,21 @@ export default class Component extends BaseComponent {
 
     // SET GLOBAL FILTER DATE
     const oToday = new Date();
-    const oFrom = new Date();
-    oFrom.setDate(oToday.getDate() - 5);
+
+    const iDay = oToday.getDay();
+
+    // Calculate distance to Monday
+    const iDiffToMonday = iDay === 0 ? -6 : 1 - iDay;
+
+    const oFrom = new Date(oToday);
+    oFrom.setDate(oToday.getDate() + iDiffToMonday);
+
+    const oTo = new Date(oFrom);
+    oTo.setDate(oFrom.getDate() + 5);
 
     const oGlobalModel = new JSONModel({
       fromDate: oFrom,
-      toDate: oToday,
+      toDate: oTo,
     });
 
     this.setModel(oGlobalModel, "globalFilterDate");

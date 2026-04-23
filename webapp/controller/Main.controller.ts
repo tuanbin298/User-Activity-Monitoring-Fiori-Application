@@ -133,10 +133,18 @@ export default class Main extends BaseController {
 
       const oToday = new Date();
 
-      const oFromNew = new Date(oToday);
-      oFromNew.setDate(oToday.getDate() - 5);
+      // Sunday = 0, Monday = 1 ... Saturday = 6
+      const iDay = oToday.getDay();
 
-      const oToNew = oToday;
+      // Get Monday
+      const iDiffToMonday = iDay === 0 ? -6 : 1 - iDay;
+
+      const oFromNew = new Date(oToday);
+      oFromNew.setDate(oToday.getDate() + iDiffToMonday);
+
+      // Get Saturday
+      const oToNew = new Date(oFromNew);
+      oToNew.setDate(oFromNew.getDate() + 5);
 
       oSource.setDateValue(oFromNew);
       oSource.setSecondDateValue(oToNew);
