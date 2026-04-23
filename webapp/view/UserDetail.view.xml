@@ -2,46 +2,66 @@
     xmlns="sap.m"
     xmlns:f="sap.uxap"
     xmlns:core="sap.ui.core"
-    xmlns:layout="sap.ui.layout" controllerName="useractivitymonitorapplication.controller.UserDetail" height="100%"
+    xmlns:layout="sap.ui.layout"
+    controllerName="useractivitymonitorapplication.controller.UserDetail" height="100%"
     xmlns:viz="sap.viz.ui5.controls"
     xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
     xmlns:viz.data="sap.viz.ui5.data"
     xmlns:ui="sap.ui.table">
 
-    <f:ObjectPageLayout id="UserDetailObjectPageLayoutId" showTitleInHeaderContent="true" upperCaseAnchorBar="false">
+    <f:ObjectPageLayout id="UserDetailObjectPageLayoutId" showTitleInHeaderContent="true"
+        upperCaseAnchorBar="false">
         <!-- HEADER TITLE -->
         <f:headerTitle>
             <f:ObjectPageDynamicHeaderTitle id="UserDetailHeaderTitleId">
                 <f:expandedHeading>
-                    <Title id="UserDetailExpandedTitleId" text="{i18n>userDetailTitle}" level="H2" />
+                    <Title id="UserDetailExpandedTitleId"
+                        text="{
+                            parts: [
+                                'i18n>userDetailTitle',
+                                'globalFilterDate>/fromDate',
+                                'globalFilterDate>/toDate'
+                            ],
+                            formatter: '.formatter.formatTitleWithDate'
+                        }"
+                        level="H2" />
                 </f:expandedHeading>
 
                 <f:snappedHeading>
-                    <Title id="UserDetailSnappedTitleId" text="{UserDetailData>/Username}" level="H3" />
+                    <Title id="UserDetailSnappedTitleId" text="{UserDetailData>/Username}"
+                        level="H3" />
                 </f:snappedHeading>
             </f:ObjectPageDynamicHeaderTitle>
         </f:headerTitle>
 
         <!-- HEADER CONTENT -->
         <f:headerContent>
-            <FlexBox id="UserDetailHeaderFlexId" alignItems="Center" wrap="Wrap" class="sapUiMediumMargin">
+            <FlexBox id="UserDetailHeaderFlexId" alignItems="Center" wrap="Wrap"
+                class="sapUiMediumMargin">
                 <!-- AVATAR -->
-                <Avatar id="UserDetailAvatarId" displaySize="XL" displayShape="Circle" initials="{UserDetailData>/UserName}" backgroundColor="Accent6" class="sapUiMediumMarginEnd" />
+                <Avatar id="UserDetailAvatarId" displaySize="XL" displayShape="Circle"
+                    initials="{UserDetailData>/UserName}" backgroundColor="Accent6"
+                    class="sapUiMediumMarginEnd" />
 
                 <!-- USER INFO -->
                 <VBox id="UserDetailHeaderInfoBoxId" width="300px">
-                    <Title id="UserDetailHeaderUserNameId" text="{UserDetailData>/Username}" level="H3" />
+                    <Title id="UserDetailHeaderUserNameId" text="{UserDetailData>/Username}"
+                        level="H3" />
 
-                    <Text id="UserDetailHeaderFullNameId" text="{UserDetailData>/FullName}" class="sapUiTinyMarginBottom" />
+                    <Text id="UserDetailHeaderFullNameId" text="{UserDetailData>/FullName}"
+                        class="sapUiTinyMarginBottom" />
 
                     <!-- USER STATUS -->
-                    <ObjectStatus id="UserDetailHeaderStatusId" text="{
+                    <ObjectStatus id="UserDetailHeaderStatusId"
+                        text="{
                         path:'UserDetailData>/LockStatus',
                         formatter:'.formatter.formatTextLockStatus'
-                    }" state="{
+                    }"
+                        state="{
                         path:'UserDetailData>/LockStatus',
                         formatter:'.formatter.formatTextLockState'
-                    }" icon="{
+                    }"
+                        icon="{
                         path:'UserDetailData>/LockStatus',
                         formatter:'.formatter.formatTextLockIcon'
                     }" />
@@ -58,31 +78,39 @@
                         <layout:Grid id="UserDetailGridCombinedId" defaultSpan="L2 M4 S12">
                             <VBox id="UserInfoBoxId">
                                 <!-- USER NAME -->
-                                <Label id="UserInfoUsernameLabelId" text="{i18n>username}" design="Bold" />
+                                <Label id="UserInfoUsernameLabelId" text="{i18n>username}"
+                                    design="Bold" />
                                 <Text id="UserInfoUsernameTextId" text="{UserDetailData>/Username}" />
 
                                 <!-- FULL NAME -->
-                                <Label id="UserInfoFullNameLabelId" text="{i18n>fullName}" design="Bold" class="sapUiSmallMarginTop" />
+                                <Label id="UserInfoFullNameLabelId" text="{i18n>fullName}"
+                                    design="Bold" class="sapUiSmallMarginTop" />
                                 <Text id="UserInfoFullNameTextId" text="{UserDetailData>/FullName}" />
                             </VBox>
 
                             <VBox id="BoxGroupInfo">
                                 <!-- GROUP -->
                                 <Label id="UserGroupLabelId" text="{i18n>userGroup}" design="Bold" />
-                                <ObjectStatus id="UserGroupStatusId" text="{UserDetailData>/UserGroup}" state="Information" icon="sap-icon://group" />
+                                <ObjectStatus id="UserGroupStatusId"
+                                    text="{UserDetailData>/UserGroup}" state="Information"
+                                    icon="sap-icon://group" />
 
                                 <!-- EMAIL -->
-                                <Label id="UserEmailLabelId" text="{i18n>email}" design="Bold" class="sapUiSmallMarginTop" />
-                                <Link id="UserEmailLinkId" text="{UserDetailData>/EmailAddress}" href="mailto:{UserDetailData>/EmailAddress}" />
+                                <Label id="UserEmailLabelId" text="{i18n>email}" design="Bold"
+                                    class="sapUiSmallMarginTop" />
+                                <Link id="UserEmailLinkId" text="{UserDetailData>/EmailAddress}"
+                                    href="mailto:{UserDetailData>/EmailAddress}" />
                             </VBox>
 
                             <VBox id="BoxAddressGeneral">
                                 <!-- ADDRESS -->
-                                <Label id="AddressNameLabelId" text="{i18n>addressName}" design="Bold" />
+                                <Label id="AddressNameLabelId" text="{i18n>addressName}"
+                                    design="Bold" />
                                 <Text id="AddressNameTextId" text="{UserDetailData>/AddressName}" />
 
                                 <!-- CITY -->
-                                <Label id="CityLabelId" text="{i18n>city}" design="Bold" class="sapUiSmallMarginTop" />
+                                <Label id="CityLabelId" text="{i18n>city}" design="Bold"
+                                    class="sapUiSmallMarginTop" />
                                 <Text id="CityTextId" text="{UserDetailData>/City}" />
                             </VBox>
 
@@ -92,18 +120,22 @@
                                 <Text id="StreetTextId" text="{UserDetailData>/Street}" />
 
                                 <!-- POSTAL CODE -->
-                                <Label id="PostalCodeLabelId" text="{i18n>postalCode}" design="Bold" class="sapUiSmallMarginTop" />
+                                <Label id="PostalCodeLabelId" text="{i18n>postalCode}" design="Bold"
+                                    class="sapUiSmallMarginTop" />
                                 <Text id="PostalCodeTextId" text="{UserDetailData>/PostalCode}" />
                             </VBox>
 
                             <VBox id="BoxValidity">
                                 <!-- VALID FROM -->
                                 <Label id="ValidFromLabelId" text="{i18n>validFrom}" design="Bold" />
-                                <Text id="ValidFromTextId" text="{path:'UserDetailData>/ValidFrom', formatter:'.formatter.formatISODate'}" />
+                                <Text id="ValidFromTextId"
+                                    text="{path:'UserDetailData>/ValidFrom', formatter:'.formatter.formatISODate'}" />
 
                                 <!-- VALID TO -->
-                                <Label id="ValidToLabelId" text="{i18n>validTo}" design="Bold" class="sapUiSmallMarginTop" />
-                                <Text id="ValidToTextId" text="{path:'UserDetailData>/ValidTo', formatter:'.formatter.formatISODate'}" />
+                                <Label id="ValidToLabelId" text="{i18n>validTo}" design="Bold"
+                                    class="sapUiSmallMarginTop" />
+                                <Text id="ValidToTextId"
+                                    text="{path:'UserDetailData>/ValidTo', formatter:'.formatter.formatISODate'}" />
                             </VBox>
 
                             <VBox id="BoxCreationInfo">
@@ -112,8 +144,10 @@
                                 <Text id="CreatedByTextId" text="{UserDetailData>/Creator}" />
 
                                 <!-- CREATE ON -->
-                                <Label id="CreatedOnLabelId" text="{i18n>createdOn}" design="Bold" class="sapUiSmallMarginTop" />
-                                <Text id="CreatedOnTextId" text="{path:'UserDetailData>/CreateOn', formatter:'.formatter.formatISODate'}" />
+                                <Label id="CreatedOnLabelId" text="{i18n>createdOn}" design="Bold"
+                                    class="sapUiSmallMarginTop" />
+                                <Text id="CreatedOnTextId"
+                                    text="{path:'UserDetailData>/CreateOn', formatter:'.formatter.formatISODate'}" />
                             </VBox>
                         </layout:Grid>
                     </f:ObjectPageSubSection>
@@ -127,9 +161,12 @@
                     <f:ObjectPageSubSection id="UserDetailSubSectionAuth">
                         <VBox id="AuthBoxId" class="sapUiMediumMargin sapUiContentPadding">
                             <!-- CHART -->
-                            <HBox id="hBoxChart" class="sapUiSmallMarginBottom" justifyContent="SpaceAround">
+                            <HBox id="hBoxChart" class="sapUiSmallMarginBottom"
+                                justifyContent="SpaceAround">
                                 <!-- AUTH - DONUT CHART -->
-                                <viz:VizFrame id="AuthVizFrameId" height="300px" width="500px" vizType="donut" vizProperties="{
+                                <viz:VizFrame id="AuthVizFrameId" height="300px" width="500px"
+                                    vizType="donut"
+                                    vizProperties="{
                                     title: {
                                         text: 'User Authentication Result'
                                     },
@@ -158,115 +195,160 @@
                                 }">
                                     <!-- Define data of chart -->
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="AuthDatasetId" data="{LoginResultData>/}">
+                                        <viz.data:FlattenedDataset id="AuthDatasetId"
+                                            data="{LoginResultData>/}">
                                             <!-- Category -->
                                             <viz.data:dimensions>
-                                                <viz.data:DimensionDefinition id="AuthDimLoginResultId" name="Login Result" value="{LoginResultData>LoginResult}" />
+                                                <viz.data:DimensionDefinition
+                                                    id="AuthDimLoginResultId" name="Login Result"
+                                                    value="{LoginResultData>LoginResult}" />
                                             </viz.data:dimensions>
 
                                             <!-- Value  -->
                                             <viz.data:measures>
-                                                <viz.data:MeasureDefinition id="AuthMeasureCountId" name="Count" value="{LoginResultData>CountLoginLog}" />
+                                                <viz.data:MeasureDefinition id="AuthMeasureCountId"
+                                                    name="Count"
+                                                    value="{LoginResultData>CountLoginLog}" />
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>
 
                                     <!-- Mapping dimension/measure into chart -->
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem id="AuthFeedSizeId" uid="size" type="Measure" values="Count" />
-                                        <viz.feeds:FeedItem id="AuthFeedColorId" uid="color" type="Dimension" values="Login Result" />
+                                        <viz.feeds:FeedItem id="AuthFeedSizeId" uid="size"
+                                            type="Measure" values="Count" />
+                                        <viz.feeds:FeedItem id="AuthFeedColorId" uid="color"
+                                            type="Dimension" values="Login Result" />
                                     </viz:feeds>
                                 </viz:VizFrame>
 
                                 <!-- AUTH PER DAY - LINE CHART -->
-                                <viz:VizFrame vizProperties="{
+                                <viz:VizFrame
+                                    vizProperties="{
                                     title: { visible: true, text: 'Login Date of User' }
-                                }" id="AuthPerDayVizFrameId" width="600px" height="400px" vizType="line">
+                                }"
+                                    id="AuthPerDayVizFrameId" width="600px" height="400px"
+                                    vizType="line">
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="AuthPerDayDatasetId" data="{LoginPerDaysData>/}">
+                                        <viz.data:FlattenedDataset id="AuthPerDayDatasetId"
+                                            data="{LoginPerDaysData>/}">
                                             <!-- DIMENSION -->
                                             <viz.data:dimensions>
-                                                <viz.data:DimensionDefinition id="AuthPerDayDimLoginResultId" name="Date" value="{LoginPerDaysData>LoginDate}" />
+                                                <viz.data:DimensionDefinition
+                                                    id="AuthPerDayDimLoginResultId" name="Date"
+                                                    value="{LoginPerDaysData>LoginDate}" />
                                             </viz.data:dimensions>
 
                                             <!-- MEASURE -->
                                             <viz.data:measures>
-                                                <viz.data:MeasureDefinition id="AuthPerDayMeasureCountId" name="Login Count" value="{LoginPerDaysData>CountLoginLog}" />
+                                                <viz.data:MeasureDefinition
+                                                    id="AuthPerDayMeasureCountId" name="Login Count"
+                                                    value="{LoginPerDaysData>CountLoginLog}" />
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>
 
                                     <!-- Mapping dimension/measure into chart -->
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem id="AuthPerDayFeedSizeId" uid="categoryAxis" type="Dimension" values="Date" />
-                                        <viz.feeds:FeedItem id="AuthPerDayFeedColorId" uid="valueAxis" type="Measure" values="Login Count" />
+                                        <viz.feeds:FeedItem id="AuthPerDayFeedSizeId"
+                                            uid="categoryAxis" type="Dimension" values="Date" />
+                                        <viz.feeds:FeedItem id="AuthPerDayFeedColorId"
+                                            uid="valueAxis" type="Measure" values="Login Count" />
                                     </viz:feeds>
                                 </viz:VizFrame>
                             </HBox>
 
                             <!-- AUTHENTICATION -->
-                            <Panel id="authFilterPanel" width="100%" headerText="{i18n>filter}" expandable="true" expanded="true" class="customFilterPanel sapUiSmallMarginBottom">
+                            <Panel id="authFilterPanel" width="100%" headerText="{i18n>filter}"
+                                expandable="true" expanded="true"
+                                class="customFilterPanel sapUiSmallMarginBottom">
                                 <content>
-                                    <Toolbar id="AuthToolbarId" class="sapUiSmallMarginBottom" design="Transparent">
+                                    <Toolbar id="AuthToolbarId" class="sapUiSmallMarginBottom"
+                                        design="Transparent">
                                         <!-- STATUS -->
-                                        <Label id="AuthStatusLabelId" text="{i18n>status}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
-                                        <Select id="AuthStatusSelectId" width="180px" change="onFilterAuth" class="sapUiSmallMarginEnd">
-                                            <core:Item id="AuthStatusAllItemId" key="" text="{i18n>all}" />
-                                            <core:Item id="AuthStatusSuccessItemId" key="SUCCESS" text="{i18n>success}" />
-                                            <core:Item id="AuthStatusFailedItemId" key="FAIL" text="{i18n>failed}" />
+                                        <Label id="AuthStatusLabelId" text="{i18n>status}"
+                                            class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+                                        <Select id="AuthStatusSelectId" width="180px"
+                                            change="onFilterAuth" class="sapUiSmallMarginEnd">
+                                            <core:Item id="AuthStatusAllItemId" key=""
+                                                text="{i18n>all}" />
+                                            <core:Item id="AuthStatusSuccessItemId" key="SUCCESS"
+                                                text="{i18n>success}" />
+                                            <core:Item id="AuthStatusFailedItemId" key="FAIL"
+                                                text="{i18n>failed}" />
                                         </Select>
 
                                         <!-- DATE -->
-                                        <Label id="AuthDateLabelId" text="{i18n>filterDate}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
-                                        <DatePicker id="AuthDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterAuthLoginDate" class="sapUiSmallMarginEnd" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd"/>
+                                        <Label id="AuthDateLabelId" text="{i18n>filterDate}"
+                                            class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+                                        <DatePicker id="AuthDatePickerId" width="180px"
+                                            placeholder="{i18n>selectDate}"
+                                            change="onFilterAuthLoginDate"
+                                            class="sapUiSmallMarginEnd" displayFormat="dd-MM-yyyy"
+                                            valueFormat="yyyy-MM-dd" />
                                     </Toolbar>
                                 </content>
                             </Panel>
 
-                            <ui:Table id="AuthTableId" visibleRowCount="10" selectionMode="Single" alternateRowColors="true" class="sapUiLargeMarginBottom">
+                            <ui:Table id="AuthTableId" visibleRowCount="10" selectionMode="Single"
+                                alternateRowColors="true" class="sapUiLargeMarginBottom">
                                 <!-- HEADER -->
                                 <ui:extension>
                                     <OverflowToolbar id="AuthTableToolbarId">
-                                        <Title id="AuthTableTitleId" text="{i18n>headerTitleTable}" level="H2" />
+                                        <Title id="AuthTableTitleId" text="{i18n>headerTitleTable}"
+                                            level="H2" />
 
                                         <ToolbarSpacer id="ToolbarSpacer" />
 
                                         <!-- EXPORT -->
-                                        <Button id="AuthExportButtonId" icon="sap-icon://excel-attachment" tooltip="{i18n>exportExcel}" press="onExportAuthExcel" />
+                                        <Button id="AuthExportButtonId"
+                                            icon="sap-icon://excel-attachment"
+                                            tooltip="{i18n>exportExcel}" press="onExportAuthExcel" />
 
                                         <!-- SETTINGS -->
-                                        <Button id="AuthSettingsButtonId" icon="sap-icon://action-settings" tooltip="{i18n>viewSettings}" press="onOpenAuthSettings" />
+                                        <Button id="AuthSettingsButtonId"
+                                            icon="sap-icon://action-settings"
+                                            tooltip="{i18n>viewSettings}" press="onOpenAuthSettings" />
                                     </OverflowToolbar>
                                 </ui:extension>
 
                                 <!-- COLUMNS -->
                                 <ui:columns>
                                     <!-- SESSION ID -->
-                                    <ui:Column id="AuthSessionIdColumnId" width="14rem" sortProperty="SessionId" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthSessionIdColumnId" width="14rem"
+                                        sortProperty="SessionId" tooltip="{i18n>introSort}">
                                         <Label id="AuthSessionIdLabelId" text="{i18n>sessionId}" />
                                         <ui:template>
-                                            <Text id="AuthSessionIdTextId" text="{SessionId}" wrapping="false" />
+                                            <Text id="AuthSessionIdTextId" text="{SessionId}"
+                                                wrapping="false" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- LOGIN RESULT -->
-                                    <ui:Column id="AuthLoginResultColumnId" width="9rem" sortProperty="LoginResult" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthLoginResultColumnId" width="9rem"
+                                        sortProperty="LoginResult" tooltip="{i18n>introSort}">
                                         <Label id="AuthLoginResultLabelId" text="{i18n>loginResult}" />
                                         <ui:template>
-                                            <ObjectStatus id="AuthLoginResultStatusId" text="{LoginResult}" icon="{path:'LoginResult', formatter:'.formatter.formatLoginResultIcon'}" state="{path:'LoginResult', formatter:'.formatter.formatLoginResultState'}" />
+                                            <ObjectStatus id="AuthLoginResultStatusId"
+                                                text="{LoginResult}"
+                                                icon="{path:'LoginResult', formatter:'.formatter.formatLoginResultIcon'}"
+                                                state="{path:'LoginResult', formatter:'.formatter.formatLoginResultState'}" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- LOGIN DATE -->
-                                    <ui:Column id="AuthLoginDateColumnId" width="10rem" sortProperty="LoginDate" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthLoginDateColumnId" width="10rem"
+                                        sortProperty="LoginDate" tooltip="{i18n>introSort}">
                                         <Label id="AuthLoginDateLabelId" text="{i18n>loginDate}" />
                                         <ui:template>
-                                            <Text id="AuthLoginDateTextId" text="{path:'LoginDate', formatter:'.formatter.formatISODate'}" />
+                                            <Text id="AuthLoginDateTextId"
+                                                text="{path:'LoginDate', formatter:'.formatter.formatISODate'}" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- LOGIN TIME -->
-                                    <ui:Column id="AuthLoginTimeColumnId" width="8rem" sortProperty="LoginTime" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthLoginTimeColumnId" width="8rem"
+                                        sortProperty="LoginTime" tooltip="{i18n>introSort}">
                                         <Label id="AuthLoginTimeLabelId" text="{i18n>loginTime}" />
                                         <ui:template>
                                             <Text id="AuthLoginTimeTextId" text="{LoginTime}" />
@@ -274,33 +356,45 @@
                                     </ui:Column>
 
                                     <!-- LOGIN MESSAGE -->
-                                    <ui:Column id="AuthLoginMessageColumnId" sortProperty="LoginMessage" tooltip="{i18n>introSort}">
-                                        <Label id="AuthLoginMessageLabelId" text="{i18n>loginMessage}" />
+                                    <ui:Column id="AuthLoginMessageColumnId"
+                                        sortProperty="LoginMessage" tooltip="{i18n>introSort}">
+                                        <Label id="AuthLoginMessageLabelId"
+                                            text="{i18n>loginMessage}" />
                                         <ui:template>
-                                            <ObjectStatus id="AuthLoginMessageStatusId" text="{LoginMessage}" icon="{path:'EventId', formatter:'.formatter.formatLoginMessageIcon'}" state="{path:'EventId', formatter:'.formatter.formatLoginMessageState'}" />
+                                            <ObjectStatus id="AuthLoginMessageStatusId"
+                                                text="{LoginMessage}"
+                                                icon="{path:'EventId', formatter:'.formatter.formatLoginMessageIcon'}"
+                                                state="{path:'EventId', formatter:'.formatter.formatLoginMessageState'}" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- LOGOUT DATE -->
-                                    <ui:Column id="AuthLogoutDateColumnId" width="10rem" sortProperty="LogoutDate" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthLogoutDateColumnId" width="10rem"
+                                        sortProperty="LogoutDate" tooltip="{i18n>introSort}">
                                         <Label id="AuthLogoutDateLabelId" text="{i18n>logoutDate}" />
                                         <ui:template>
-                                            <Text id="AuthLogoutDateTextId" text="{path:'LogoutDate', formatter:'.formatter.formatISODate'}" />
+                                            <Text id="AuthLogoutDateTextId"
+                                                text="{path:'LogoutDate', formatter:'.formatter.formatISODate'}" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- LOGOUT TIME -->
-                                    <ui:Column id="AuthLogoutTimeColumnId" width="8rem" sortProperty="LogoutTime" tooltip="{i18n>introSort}">
+                                    <ui:Column id="AuthLogoutTimeColumnId" width="8rem"
+                                        sortProperty="LogoutTime" tooltip="{i18n>introSort}">
                                         <Label id="AuthLogoutTimeLabelId" text="{i18n>logoutTime}" />
                                         <ui:template>
-                                            <Text id="AuthLogoutTimeTextId" text="{path:'LogoutTime', formatter:'.formatter.formatLogoutTime'}" />
+                                            <Text id="AuthLogoutTimeTextId"
+                                                text="{path:'LogoutTime', formatter:'.formatter.formatLogoutTime'}" />
                                         </ui:template>
                                     </ui:Column>
 
                                     <!-- NAVIGATE -->
-                                    <ui:Column id="AuthNavigateColumnId" width="5rem" hAlign="Center">
+                                    <ui:Column id="AuthNavigateColumnId" width="5rem"
+                                        hAlign="Center">
                                         <ui:template>
-                                            <Button id="AuthNavigateButtonId" icon="sap-icon://navigation-right-arrow" type="Transparent" press="onNavigationToAuthDetail" />
+                                            <Button id="AuthNavigateButtonId"
+                                                icon="sap-icon://navigation-right-arrow"
+                                                type="Transparent" press="onNavigationToAuthDetail" />
                                         </ui:template>
                                     </ui:Column>
                                 </ui:columns>
@@ -316,9 +410,11 @@
                     <f:ObjectPageSubSection id="UserDetailSubSectionActivity">
                         <VBox id="ActivityVBoxId" class="sapUiMediumMargin sapUiContentPadding">
                             <!-- CHART -->
-                            <HBox id="hBoxActChart" class="sapUiSmallMarginBottom" justifyContent="SpaceAround">
+                            <HBox id="hBoxActChart" class="sapUiSmallMarginBottom"
+                                justifyContent="SpaceAround">
                                 <!-- TCODE USAGE - PIE CHART -->
-                                <viz:VizFrame vizProperties="{
+                                <viz:VizFrame
+                                    vizProperties="{
                                     title: { visible: true, text: 'Top 5 TCode Usage By User' },
                                     plotArea: {
                                         dataLabel: {
@@ -327,51 +423,66 @@
                                             hideWhenOverlap: true
                                         }
                                     }
-                                }" id="tcodeChartByUser" vizType="pie" width="670px" height="300px">
+                                }"
+                                    id="tcodeChartByUser" vizType="pie" width="670px" height="300px">
                                     <!-- Define data of chart -->
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="TCodeByUserDatasetId" data="{TCodeData>/}">
+                                        <viz.data:FlattenedDataset id="TCodeByUserDatasetId"
+                                            data="{TCodeData>/}">
                                             <!-- DIMENSION -->
                                             <viz.data:dimensions>
-                                                <viz.data:DimensionDefinition id="TCodeByUserDimId" name="Label" value="{TCodeData>Label}" />
+                                                <viz.data:DimensionDefinition id="TCodeByUserDimId"
+                                                    name="Label" value="{TCodeData>Label}" />
                                             </viz.data:dimensions>
 
                                             <!-- MEASURE -->
                                             <viz.data:measures>
-                                                <viz.data:MeasureDefinition id="TCodeByUserMeasureCountId" name="Usage" value="{TCodeData>TCodeCount}" />
+                                                <viz.data:MeasureDefinition
+                                                    id="TCodeByUserMeasureCountId" name="Usage"
+                                                    value="{TCodeData>TCodeCount}" />
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>
 
                                     <!-- Mapping dimension/measure into chart -->
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem id="ActTcodeMeasure" uid="size" type="Measure" values="Usage" />
-                                        <viz.feeds:FeedItem id="ActTcodeValue" uid="color" type="Dimension" values="Label" />
+                                        <viz.feeds:FeedItem id="ActTcodeMeasure" uid="size"
+                                            type="Measure" values="Usage" />
+                                        <viz.feeds:FeedItem id="ActTcodeValue" uid="color"
+                                            type="Dimension" values="Label" />
                                     </viz:feeds>
                                 </viz:VizFrame>
 
                                 <!-- ACTIVITY PERDAY - LINE CHART -->
-                                <viz:VizFrame vizProperties="{
+                                <viz:VizFrame
+                                    vizProperties="{
                                     title: { visible: true, text: 'Activity of User' }
-                                }" id="idLineChart" width="600px" height="400px" vizType="line">
+                                }"
+                                    id="idLineChart" width="600px" height="400px" vizType="line">
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="ActDatasetId" data="{ActPerDayData>/}">
+                                        <viz.data:FlattenedDataset id="ActDatasetId"
+                                            data="{ActPerDayData>/}">
                                             <!-- DIMENSION -->
                                             <viz.data:dimensions>
-                                                <viz.data:DimensionDefinition id="ActDimId" name="Date" value="{ActPerDayData>ActDate}" />
+                                                <viz.data:DimensionDefinition id="ActDimId"
+                                                    name="Date" value="{ActPerDayData>ActDate}" />
                                             </viz.data:dimensions>
 
                                             <!-- MEASURE -->
                                             <viz.data:measures>
-                                                <viz.data:MeasureDefinition id="ActMeasureCountId" name="Activity Count" value="{ActPerDayData>ActivityCount}" />
+                                                <viz.data:MeasureDefinition id="ActMeasureCountId"
+                                                    name="Activity Count"
+                                                    value="{ActPerDayData>ActivityCount}" />
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>
 
                                     <!-- Mapping dimension/measure into chart -->
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem id="ActMeasure" uid="valueAxis" type="Measure" values="Activity Count" />
-                                        <viz.feeds:FeedItem id="ActValue" uid="categoryAxis" type="Dimension" values="Date" />
+                                        <viz.feeds:FeedItem id="ActMeasure" uid="valueAxis"
+                                            type="Measure" values="Activity Count" />
+                                        <viz.feeds:FeedItem id="ActValue" uid="categoryAxis"
+                                            type="Dimension" values="Date" />
                                     </viz:feeds>
                                 </viz:VizFrame>
                             </HBox>
@@ -379,96 +490,145 @@
                             <!-- ACTIVITY -->
                             <VBox id="ActivityVBoxContentId" class="sapUiMediumMarginTop">
                                 <!-- FILTER BAR -->
-                                <Panel id="activityUserFilterPanel" width="100%" headerText="{i18n>filter}" expandable="true" expanded="true" class="customFilterPanel sapUiSmallMarginBottom">
-                                    <Toolbar id="ActivityUserToolbarId" class="sapUiSmallMarginBottom" design="Transparent">
+                                <Panel id="activityUserFilterPanel" width="100%"
+                                    headerText="{i18n>filter}" expandable="true" expanded="true"
+                                    class="customFilterPanel sapUiSmallMarginBottom">
+                                    <Toolbar id="ActivityUserToolbarId"
+                                        class="sapUiSmallMarginBottom" design="Transparent">
 
                                         <!-- Activity Type -->
-                                        <Label id="ActivityTypeLabelId" text="{i18n>activityType}" class="sapUiTinyMarginEnd" />
-                                        <Select id="ActivityTypeSelectId" width="140px" change="onFilterActivity">
-                                            <core:Item id="ActivityTypeAllItemId" key="" text="{i18n>all}" />
-                                            <core:Item id="ActivityTypeTcodeItemId" key="TCODE" text="{i18n>itemTcode}" />
-                                            <core:Item id="ActivityTypeDumpItemId" key="DUMP" text="{i18n>itemDump}" />
+                                        <Label id="ActivityTypeLabelId" text="{i18n>activityType}"
+                                            class="sapUiTinyMarginEnd" />
+                                        <Select id="ActivityTypeSelectId" width="140px"
+                                            change="onFilterActivity">
+                                            <core:Item id="ActivityTypeAllItemId" key=""
+                                                text="{i18n>all}" />
+                                            <core:Item id="ActivityTypeTcodeItemId" key="TCODE"
+                                                text="{i18n>itemTcode}" />
+                                            <core:Item id="ActivityTypeDumpItemId" key="DUMP"
+                                                text="{i18n>itemDump}" />
                                         </Select>
 
                                         <!-- Tcode -->
-                                        <Label id="ActivityTCodeLabelId" text="{i18n>tCode}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                        <Input id="ActivityTCodeInputId" width="200px" placeholder="{i18n>tCode}" showValueHelp="true" liveChange="onSearchTCode" valueHelpRequest="onUserSearchHelpTCode" showClearIcon="true" class="sapUiSmallMarginEnd" />
+                                        <Label id="ActivityTCodeLabelId" text="{i18n>tCode}"
+                                            class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                        <Input id="ActivityTCodeInputId" width="200px"
+                                            placeholder="{i18n>tCode}" showValueHelp="true"
+                                            liveChange="onSearchTCode"
+                                            valueHelpRequest="onUserSearchHelpTCode"
+                                            showClearIcon="true" class="sapUiSmallMarginEnd" />
 
                                         <!-- Date -->
-                                        <Label id="ActivityDateLabelId" text="{i18n>activityDate}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                        <DatePicker id="ActivityDatePickerId" width="150px" placeholder="{i18n>selectDate}" change="onFilterActivity" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd"/>
+                                        <Label id="ActivityDateLabelId" text="{i18n>activityDate}"
+                                            class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                        <DatePicker id="ActivityDatePickerId" width="150px"
+                                            placeholder="{i18n>selectDate}"
+                                            change="onFilterActivity" displayFormat="dd-MM-yyyy"
+                                            valueFormat="yyyy-MM-dd" />
                                     </Toolbar>
                                 </Panel>
 
                                 <!-- TABLE -->
-                                <ui:Table id="ActivityTableId" visibleRowCount="8" selectionMode="Single" alternateRowColors="true" class="sapUiLargeMarginBottom">
+                                <ui:Table id="ActivityTableId" visibleRowCount="8"
+                                    selectionMode="Single" alternateRowColors="true"
+                                    class="sapUiLargeMarginBottom">
                                     <!-- HEADER TOOLBAR -->
                                     <ui:extension>
                                         <OverflowToolbar id="ActivityTableToolbarId">
-                                            <Title id="ActivityTableTitleId" text="{i18n>activityTable}" level="H2" />
+                                            <Title id="ActivityTableTitleId"
+                                                text="{i18n>activityTable}" level="H2" />
                                             <ToolbarSpacer id="ActivityTableSpacerId" />
 
                                             <!-- EXPORT -->
-                                            <Button id="ActivityExportButtonId" icon="sap-icon://excel-attachment" tooltip="{i18n>exportExcel}" press="onExportActivityExcel" />
+                                            <Button id="ActivityExportButtonId"
+                                                icon="sap-icon://excel-attachment"
+                                                tooltip="{i18n>exportExcel}"
+                                                press="onExportActivityExcel" />
 
                                             <!-- SETTINGS -->
-                                            <Button id="ActivitySettingsButtonId" icon="sap-icon://action-settings" tooltip="{i18n>viewSettings}" press="onOpenActivitySettings" />
+                                            <Button id="ActivitySettingsButtonId"
+                                                icon="sap-icon://action-settings"
+                                                tooltip="{i18n>viewSettings}"
+                                                press="onOpenActivitySettings" />
                                         </OverflowToolbar>
                                     </ui:extension>
 
                                     <!-- COLUMNS -->
                                     <ui:columns>
                                         <!-- LOG ID -->
-                                        <ui:Column id="ActivityLogIdColumnId" width="14rem" sortProperty="ActId" tooltip="{i18n>introSort}">
+                                        <ui:Column id="ActivityLogIdColumnId" width="14rem"
+                                            sortProperty="ActId" tooltip="{i18n>introSort}">
                                             <Label id="ActivityLogIdLabelId" text="{i18n>logId}" />
                                             <ui:template>
-                                                <Text id="ActivityLogIdTextId" text="{ActId}" wrapping="false" />
+                                                <Text id="ActivityLogIdTextId" text="{ActId}"
+                                                    wrapping="false" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- ACTIVITY TYPE -->
-                                        <ui:Column id="ActivityTypeColumnId" width="10rem" hAlign="Center" sortProperty="ActType" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityTypeColumnLabelId" text="{i18n>activityType}" />
+                                        <ui:Column id="ActivityTypeColumnId" width="10rem"
+                                            hAlign="Center" sortProperty="ActType"
+                                            tooltip="{i18n>introSort}">
+                                            <Label id="ActivityTypeColumnLabelId"
+                                                text="{i18n>activityType}" />
                                             <ui:template>
-                                                <ObjectStatus id="ActivityTypeStatus" text="{ActType}" icon="{path:'ActType', formatter:'.formatter.formatActivityType'}" state="{path:'ActType', formatter:'.formatter.formatActivityState'}" />
+                                                <ObjectStatus id="ActivityTypeStatus"
+                                                    text="{ActType}"
+                                                    icon="{path:'ActType', formatter:'.formatter.formatActivityType'}"
+                                                    state="{path:'ActType', formatter:'.formatter.formatActivityState'}" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- TCODE -->
-                                        <ui:Column id="ActivityTCodeColumnId" width="8rem" sortProperty="Tcode" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityTCodeColumnLabelId" text="{i18n>tCode}" />
+                                        <ui:Column id="ActivityTCodeColumnId" width="8rem"
+                                            sortProperty="Tcode" tooltip="{i18n>introSort}">
+                                            <Label id="ActivityTCodeColumnLabelId"
+                                                text="{i18n>tCode}" />
                                             <ui:template>
-                                                <ObjectStatus id="ActivityTCodeStatus" text="{Tcode}" icon="{path:'Tcode', formatter:'.formatter.formatTCodeIcon'}" />
+                                                <ObjectStatus id="ActivityTCodeStatus"
+                                                    text="{Tcode}"
+                                                    icon="{path:'Tcode', formatter:'.formatter.formatTCodeIcon'}" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- TCODE NAME -->
-                                        <ui:Column id="ActivityTCodeNameColumnId" width="12rem" sortProperty="TCodeName" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityTCodeNameLabelId" text="{i18n>tCodeName}" />
+                                        <ui:Column id="ActivityTCodeNameColumnId" width="12rem"
+                                            sortProperty="TCodeName" tooltip="{i18n>introSort}">
+                                            <Label id="ActivityTCodeNameLabelId"
+                                                text="{i18n>tCodeName}" />
                                             <ui:template>
-                                                <Text id="ActivityTCodeNameTextId" text="{TCodeName}" wrapping="false" />
+                                                <Text id="ActivityTCodeNameTextId"
+                                                    text="{TCodeName}" wrapping="false" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- MESSAGE -->
-                                        <ui:Column id="ActivityMessageColumnId" sortProperty="MessageText" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityMessageLabelId" text="{i18n>activityMessage}" />
+                                        <ui:Column id="ActivityMessageColumnId"
+                                            sortProperty="MessageText" tooltip="{i18n>introSort}">
+                                            <Label id="ActivityMessageLabelId"
+                                                text="{i18n>activityMessage}" />
                                             <ui:template>
-                                                <ObjectStatus id="ActivityMessageStatusId" text="{MessageText}" state="Information" />
+                                                <ObjectStatus id="ActivityMessageStatusId"
+                                                    text="{MessageText}" state="Information" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- DATE -->
-                                        <ui:Column id="ActivityDateColumnId" width="10rem" sortProperty="ActDate" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityDateColumnLabelId" text="{i18n>activityDate}" />
+                                        <ui:Column id="ActivityDateColumnId" width="10rem"
+                                            sortProperty="ActDate" tooltip="{i18n>introSort}">
+                                            <Label id="ActivityDateColumnLabelId"
+                                                text="{i18n>activityDate}" />
                                             <ui:template>
-                                                <Text id="ActivityDateTextId" text="{path:'ActDate', formatter: '.formatter.formatISODate'}" />
+                                                <Text id="ActivityDateTextId"
+                                                    text="{path:'ActDate', formatter: '.formatter.formatISODate'}" />
                                             </ui:template>
                                         </ui:Column>
 
                                         <!-- TIME -->
-                                        <ui:Column id="ActivityTimeColumnId" width="8rem" sortProperty="ActTims" tooltip="{i18n>introSort}">
-                                            <Label id="ActivityTimeColumnLabelId" text="{i18n>activityTime}" />
+                                        <ui:Column id="ActivityTimeColumnId" width="8rem"
+                                            sortProperty="ActTims" tooltip="{i18n>introSort}">
+                                            <Label id="ActivityTimeColumnLabelId"
+                                                text="{i18n>activityTime}" />
                                             <ui:template>
                                                 <Text id="ActivityTimeTextId" text="{ActTims}" />
                                             </ui:template>

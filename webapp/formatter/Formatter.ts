@@ -1,3 +1,4 @@
+import DateFormat from "sap/ui/core/format/DateFormat";
 import { ValueState } from "sap/ui/core/library";
 
 const Formatter = {
@@ -109,6 +110,19 @@ const Formatter = {
     } else {
       return "sap-icon://customer-and-contacts";
     }
+  },
+
+  // Format date for User detail title
+  formatTitleWithDate(title: string, fromDate: Date, toDate: Date): string {
+    if (!fromDate || !toDate) {
+      return title;
+    }
+
+    const oDateFormat = DateFormat.getDateInstance({
+      pattern: "dd/MM",
+    });
+
+    return `${title} (${oDateFormat.format(fromDate)} - ${oDateFormat.format(toDate)})`;
   },
 };
 
