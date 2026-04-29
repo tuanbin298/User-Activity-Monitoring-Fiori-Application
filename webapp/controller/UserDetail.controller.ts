@@ -20,6 +20,7 @@ import Fragment from "sap/ui/core/Fragment";
 import Input from "sap/m/Input";
 import Spreadsheet from "sap/ui/export/Spreadsheet";
 import MessageBox from "sap/m/MessageBox";
+import BaseService from "useractivitymonitorapplication/services/BaseService";
 
 export default class UserDetail extends BaseController {
   public formatter = Formatter;
@@ -41,9 +42,7 @@ export default class UserDetail extends BaseController {
 
     const oRouter = (this as any).getAppComponent().getRouter();
     if (oRouter) {
-      oRouter
-        .getRoute("UserDetail")
-        .attachPatternMatched(this._onObjectMatched, this);
+      oRouter.getRoute("UserDetail").attachPatternMatched(this._onObjectMatched, this);
     }
   }
 
@@ -92,13 +91,7 @@ export default class UserDetail extends BaseController {
   // Call Odata - Load data
   // =================================================
   private async _loadAllData(username: string): Promise<void> {
-    await Promise.all([
-      this._loadUserDetail(username),
-      this._loadAuthTable(username),
-      this._loadAuthChart(username),
-      this._loadActivityTable(username),
-      this._loadActivityChart(username),
-    ]);
+    await Promise.all([this._loadUserDetail(username), this._loadAuthTable(username), this._loadAuthChart(username), this._loadActivityTable(username), this._loadActivityChart(username)]);
 
     await this.applyAuthFilters();
     await this.applyActFilters();
@@ -115,9 +108,7 @@ export default class UserDetail extends BaseController {
     if (!oView || !username) return;
 
     try {
-      const [userDetailData] = await Promise.all([
-        UserDetailService.getAuthDetailData(oModel, aFilters),
-      ]);
+      const [userDetailData] = await Promise.all([UserDetailService.getAuthDetailData(oModel, aFilters)]);
 
       // Call fn getAuthDetailData
       const oDetailModel = new JSONModel(userDetailData[0].getObject());
@@ -173,9 +164,7 @@ export default class UserDetail extends BaseController {
     }
 
     // Filter Status
-    const sStatus = (
-      this.byId("AuthStatusSelectId") as Select
-    ).getSelectedKey();
+    const sStatus = (this.byId("AuthStatusSelectId") as Select).getSelectedKey();
     if (sStatus) {
       aFilters.push(new Filter("LoginResult", FilterOperator.EQ, sStatus));
     }
@@ -193,17 +182,12 @@ export default class UserDetail extends BaseController {
 
         const sDate = oFormatter.format(oDate);
 
-        this._aAuthDateFilters = [
-          new Filter("LoginDate", FilterOperator.EQ, sDate),
-        ];
+        this._aAuthDateFilters = [new Filter("LoginDate", FilterOperator.EQ, sDate)];
       }
     }
 
     // Filter date or Global filter date
-    const aDateFilters =
-      this._aAuthDateFilters.length > 0
-        ? this._aAuthDateFilters
-        : this.getGlobalDateFilter();
+    const aDateFilters = this._aAuthDateFilters.length > 0 ? this._aAuthDateFilters : this.getGlobalDateFilter();
 
     return [...aDateFilters, ...aFilters];
   }
@@ -218,10 +202,7 @@ export default class UserDetail extends BaseController {
     if (!oView || !username) return;
 
     // Filter
-    const aFilters = [
-      new Filter("Username", FilterOperator.EQ, username),
-      ...this.getGlobalDateFilter(),
-    ];
+    const aFilters = [new Filter("Username", FilterOperator.EQ, username), ...this.getGlobalDateFilter()];
 
     try {
       const [loginResultData, loginPerDays] = await Promise.all([
@@ -296,9 +277,7 @@ export default class UserDetail extends BaseController {
     }
 
     // Filter Act Type
-    const sStatus = (
-      this.byId("ActivityTypeSelectId") as Select
-    ).getSelectedKey();
+    const sStatus = (this.byId("ActivityTypeSelectId") as Select).getSelectedKey();
     if (sStatus) {
       aFilters.push(new Filter("ActType", FilterOperator.EQ, sStatus));
     }
@@ -322,17 +301,12 @@ export default class UserDetail extends BaseController {
 
         const sDate = oFormatter.format(oDate);
 
-        this._aActDateFilters = [
-          new Filter("ActDate", FilterOperator.EQ, sDate),
-        ];
+        this._aActDateFilters = [new Filter("ActDate", FilterOperator.EQ, sDate)];
       }
     }
 
     // Filter date or Global filter date
-    const aDateFilters =
-      this._aActDateFilters.length > 0
-        ? this._aActDateFilters
-        : aGlobalDateFilter;
+    const aDateFilters = this._aActDateFilters.length > 0 ? this._aActDateFilters : aGlobalDateFilter;
 
     return [...aDateFilters, ...aFilters];
   }
@@ -423,10 +397,7 @@ export default class UserDetail extends BaseController {
     ];
 
     // Call fn getSHTCodeData
-    const aTCode = await SearchHelpService.getSHTCodeData(
-      oModel,
-      aGlobalDateFilter,
-    );
+    const aTCode = await SearchHelpService.getSHTCodeData(oModel, aGlobalDateFilter);
 
     const oTCodeModel = new JSONModel(aTCode);
     this.getView()?.setModel(oTCodeModel, "TCodeSeachHelp");
@@ -479,11 +450,14 @@ export default class UserDetail extends BaseController {
       actions: ["YES", "NO"],
       emphasizedAction: "YES",
 
-      onClose: (oAction: string | null) => {
+      onClose: async (oAction: string | null) => {
         if (oAction === "YES") {
           // Get table and its OData list binding
           const oTable = this.byId("AuthTableId");
           const oBinding = oTable?.getBinding("rows") as ODataListBinding;
+
+          // Fetch all data as plain array to avoid CSRF token issue with POST $batch
+          const aData = await BaseService._fetchAllData(oBinding);
 
           // Format in Excel
           const aCols = [
@@ -503,14 +477,13 @@ export default class UserDetail extends BaseController {
           // Spreadsheet config
           const oSettings = {
             workbook: { columns: aCols },
-            dataSource: oBinding,
+            dataSource: aData,
             fileName: sFileName,
             worker: false,
           };
 
-          // Spreadsheet config
-          const oSheet = new Spreadsheet(oSettings);
           // Create Excel file and download it
+          const oSheet = new Spreadsheet(oSettings);
           oSheet
             .build()
             .then(() => {
@@ -558,9 +531,7 @@ export default class UserDetail extends BaseController {
     const aColumns = oTable.getColumns();
 
     // Remove Navigator column
-    const aFilteredColumns = aColumns.filter(
-      (oColumn: any) => !oColumn.getId().includes("AuthNavigateColumnId"),
-    );
+    const aFilteredColumns = aColumns.filter((oColumn: any) => !oColumn.getId().includes("AuthNavigateColumnId"));
 
     // Create new array contain every column object
     const aColumnData = aFilteredColumns.map((oColumn: any) => {
@@ -743,9 +714,7 @@ export default class UserDetail extends BaseController {
     const aColumns = oTable.getColumns();
 
     // Get model and property
-    const oModel = this.getView()?.getModel(
-      "ActivityColumnsModel",
-    ) as JSONModel;
+    const oModel = this.getView()?.getModel("ActivityColumnsModel") as JSONModel;
     const aData = oModel.getProperty("/columns");
 
     // Set visible for column

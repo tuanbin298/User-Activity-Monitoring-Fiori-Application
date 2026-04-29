@@ -10,6 +10,7 @@
     "rootDir": "./webapp",
     "outDir": "./dist",
     "baseUrl": "./",
+    "ignoreDeprecations": "5.0",
     "paths": {
       "sap/*": ["node_modules/@sapui5/types/sap/*"],
       "useractivitymonitorapplication/*": ["./webapp/*"]

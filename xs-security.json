@@ -1,0 +1,42 @@
+{
+  "xsappname": "useractivitymonitor",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.BusinessUser",
+      "description": "View user activity logs and monitoring data"
+    },
+    {
+      "name": "$XSAPPNAME.TechnicalUser",
+      "description": "Full access including technical and admin functions"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "BusinessUser",
+      "description": "Business user - view user activity monitoring data",
+      "scope-references": ["$XSAPPNAME.BusinessUser"]
+    },
+    {
+      "name": "TechnicalUser",
+      "description": "Technical user - full access to all features",
+      "scope-references": ["$XSAPPNAME.BusinessUser", "$XSAPPNAME.TechnicalUser"]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "UserActivityMonitor_BusinessUser",
+      "description": "Business user role collection for User Activity Monitor app",
+      "role-template-references": ["$XSAPPNAME.BusinessUser"]
+    },
+    {
+      "name": "UserActivityMonitor_TechnicalUser",
+      "description": "Technical user role collection for User Activity Monitor app",
+      "role-template-references": ["$XSAPPNAME.TechnicalUser"]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": ["https://*.hana.ondemand.com/**", "https://*.ap21.hana.ondemand.com/**"]
+  }
+}
