@@ -42,16 +42,6 @@ server:
         backend:
           - path: /sap
             url: https://s40lp1.ucc.cit.tum.de
-    - name: sap-fe-mockserver
-      beforeMiddleware: csp
-      configuration:
-        mountPath: /
-        services:
-          - urlPath: /sap/opu/odata4/sap/zapi_user_activity/srvd/sap/zsd_user_activity/0001
-            metadataPath: ./webapp/localService/mainService/metadata.xml
-            mockdataPath: ./webapp/localService/mainService/data
-            generateMockData: true
-        annotations: []
 builder:
   customTasks:
     - name: ui5-tooling-transpile-task

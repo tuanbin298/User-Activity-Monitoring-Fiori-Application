@@ -1,5 +1,12 @@
 {
   "_version": "1.81.0",
+  "sap.cloud": {
+    "public": true,
+    "service": "useractivitymonitor"
+  },
+  "sap.platform.cf": {
+    "ui5VersionNumber": "1.147.x"
+  },
   "sap.app": {
     "id": "useractivitymonitorapplication",
     "type": "application",
@@ -18,6 +25,21 @@
       "id": "@sap/generator-fiori:fpm",
       "version": "1.20.2",
       "toolsId": "6cb8b9da-d557-4625-885e-83e572fbcf49"
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "intent1": {
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          },
+          "semanticObject": "UserActivityMonitor",
+          "action": "display",
+          "title": "{{appTitle}}",
+          "subTitle": "{{appDescription}}",
+          "icon": "sap-icon://monitoring-r2"
+        }
+      }
     },
     "dataSources": {
       "annotation": {

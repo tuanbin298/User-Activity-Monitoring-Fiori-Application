@@ -1,0 +1,69 @@
+2026-04-23 03:21:22 Device API logging initialized - DEVICE
+/fincentraluserdefaultparameter/~638c9275a5b49b409a2064b2f2e9a9e02bfca4a8~/i18n/i18n_en.properties:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+fetch-dbg.js:209  Failed to load resource: the server responded with a status of 404 ()
+(anonymous) @ fetch-dbg.js:209Understand this error
+Log-dbg.js:497 2026-04-23 03:21:24.063500 sap/ushell/services/_AppState/AppStatePersistencyMethod is deprecated and will be removed in an upcoming release! -  
+log @ Log-dbg.js:497Understand this error
+Patcher-dbg.js:353 Unrecognized feature: 'battery'.
+(anonymous) @ Patcher-dbg.js:353Understand this warning
+Device-dbg.js:88 2026-04-23 03:21:24 [ui5appruntime.html] Device API logging initialized - DEVICE
+/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/manifest.json?sap-language=EN:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+assert-dbg.js:33 Assertion failed: EventProvider.attachEvent: oListener must be empty or an object
+(anonymous) @ assert-dbg.js:33Understand this error
+/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component-preload.js:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+/cp.portal/ui5appruntime.html?siteId=55f2e737-6a74-41eb-afe0-bb7865efffb5&subaccountId=e939f1cb-cc57-4776-a976-f058998e59af&saasApprouter=true&sap-ui-version=1.147.x&sap-ui-app-id=useractivitymonitorapplication&scenario=LAUNCHPAD&sap-startup-params=&sap-shell=FLP&sap-touch=0&sap-ui-versionedLibCss=true&sap-plugins=RTAPluginAgent&sap-history-dir=NewEntry&sap-personalization=true&sap-theme=sap_horizon&sap-locale=en&sap-propagate-async-loading=true&sap-iframe-hint=UI5#UserActivityMonitor-display?sap-ui-app-id-hint=saas_approuter_useractivitymonitorapplication:1 Refused to execute script from 'https://4883ffbctrial.launchpad.cfapps.ap21.hana.ondemand.com/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component-preload.js' because its MIME type ('') is not executable, and strict MIME type checking is enabled.Understand this error
+/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component-preload.js:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+/cp.portal/ui5appruntime.html?siteId=55f2e737-6a74-41eb-afe0-bb7865efffb5&subaccountId=e939f1cb-cc57-4776-a976-f058998e59af&saasApprouter=true&sap-ui-version=1.147.x&sap-ui-app-id=useractivitymonitorapplication&scenario=LAUNCHPAD&sap-startup-params=&sap-shell=FLP&sap-touch=0&sap-ui-versionedLibCss=true&sap-plugins=RTAPluginAgent&sap-history-dir=NewEntry&sap-personalization=true&sap-theme=sap_horizon&sap-locale=en&sap-propagate-async-loading=true&sap-iframe-hint=UI5#UserActivityMonitor-display?sap-ui-app-id-hint=saas_approuter_useractivitymonitorapplication:1 Refused to execute script from 'https://4883ffbctrial.launchpad.cfapps.ap21.hana.ondemand.com/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component-preload.js' because its MIME type ('') is not executable, and strict MIME type checking is enabled.Understand this error
+Log-dbg.js:497 2026-04-23 03:21:29.018000 failed to load JavaScript resource: useractivitymonitorapplication/Component-preload.js -  sap.ui.ModuleSystem
+log @ Log-dbg.js:497Understand this error
+/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+/cp.portal/ui5appruntime.html?siteId=55f2e737-6a74-41eb-afe0-bb7865efffb5&subaccountId=e939f1cb-cc57-4776-a976-f058998e59af&saasApprouter=true&sap-ui-version=1.147.x&sap-ui-app-id=useractivitymonitorapplication&scenario=LAUNCHPAD&sap-startup-params=&sap-shell=FLP&sap-touch=0&sap-ui-versionedLibCss=true&sap-plugins=RTAPluginAgent&sap-history-dir=NewEntry&sap-personalization=true&sap-theme=sap_horizon&sap-locale=en&sap-propagate-async-loading=true&sap-iframe-hint=UI5#UserActivityMonitor-display?sap-ui-app-id-hint=saas_approuter_useractivitymonitorapplication:1 Refused to execute script from 'https://4883ffbctrial.launchpad.cfapps.ap21.hana.ondemand.com/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js' because its MIME type ('') is not executable, and strict MIME type checking is enabled.Understand this error
+/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+/cp.portal/ui5appruntime.html?siteId=55f2e737-6a74-41eb-afe0-bb7865efffb5&subaccountId=e939f1cb-cc57-4776-a976-f058998e59af&saasApprouter=true&sap-ui-version=1.147.x&sap-ui-app-id=useractivitymonitorapplication&scenario=LAUNCHPAD&sap-startup-params=&sap-shell=FLP&sap-touch=0&sap-ui-versionedLibCss=true&sap-plugins=RTAPluginAgent&sap-history-dir=NewEntry&sap-personalization=true&sap-theme=sap_horizon&sap-locale=en&sap-propagate-async-loading=true&sap-iframe-hint=UI5#UserActivityMonitor-display?sap-ui-app-id-hint=saas_approuter_useractivitymonitorapplication:1 Refused to execute script from 'https://4883ffbctrial.launchpad.cfapps.ap21.hana.ondemand.com/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js' because its MIME type ('') is not executable, and strict MIME type checking is enabled.Understand this error
+Log-dbg.js:497 2026-04-23 03:21:29.121399 failed to load JavaScript resource: useractivitymonitorapplication/Component.js -  sap.ui.ModuleSystem
+log @ Log-dbg.js:497Understand this error
+Log-dbg.js:497 2026-04-23 03:21:29.121699 The issue is most likely caused by application useractivitymonitorapplication. Please create a support incident and assign it to the support component of the respective application. - Failed to load UI5 component with properties: '{
+    "name": "useractivitymonitorapplication",
+    "url": "/d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/",
+    "manifest": true,
+    "asyncHints": {
+        "libs": [
+            {
+                "name": "sap.viz",
+                "lazy": false
+            },
+            {
+                "name": "sap.fe.macros",
+                "lazy": false
+            },
+            {
+                "name": "sap.m",
+                "lazy": false
+            },
+            {
+                "name": "sap.fe.core",
+                "lazy": false
+            },
+            {
+                "name": "sap.ui.fl",
+                "lazy": false
+            }
+        ],
+        "components": [],
+        "waitFor": []
+    },
+    "messages": [],
+    "version": "0.0.1",
+    "id": "application-UserActivityMonitor-display-component",
+    "componentData": {
+        "startupParameters": {}
+    }
+}'. Error likely caused by:
+ModuleError: failed to load 'useractivitymonitorapplication/Component.js' from /d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js: script load error
+    at xe (https://sapui5.hana.ondemand.com/1.147.1/resources/sap/fiori/appruntime-min-0.js:15:7104)
+    at pe.failWith (https://sapui5.hana.ondemand.com/1.147.1/resources/sap/fiori/appruntime-min-0.js:15:4892)
+    at HTMLScriptElement.i (https://sapui5.hana.ondemand.com/1.147.1/resources/sap/fiori/appruntime-min-0.js:15:10951)
+Caused by: Error: script load error
+    at HTMLScriptElement.i (https://sapui5.hana.ondemand.com/1.147.1/resources/sap/fiori/appruntime-min-0.js:15:10993) useractivitymonitorapplication
+log @ Log-dbg.js:497Understand this error
+AppRuntimeInternal-dbg.js:163 Uncaught (in promise) ModuleError: failed to load 'useractivitymonitorapplication/Component.js' from /d656badb-aace-4c24-aeb1-06a198bcba33.comsapuseractivitymonitor.useractivitymonitorapplication/~9b218019-992d-4f44-ac2b-474acd408bf5~/Component.js: script load error
