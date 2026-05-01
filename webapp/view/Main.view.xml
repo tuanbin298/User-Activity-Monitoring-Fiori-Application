@@ -46,14 +46,14 @@
                             <!-- KPI BAR -->
                             <HBox id="kpiHBox" justifyContent="Center" wrap="Wrap" class="sapUiSmallMarginTop">
                                 <!-- TOTAL USERS -->
-                                <VBox id="kpiTotalUsersBox" class="kpiBox kpiBlue">
+                                <VBox id="kpiTotalUsersBox" class="kpiBox kpiBlue" tooltip="{i18n>viewDetail}">
                                     <core:Icon id="kpiTotalUsersIcon" src="sap-icon://group" size="1.5rem" />
                                     <Text id="kpiTotalUsersLabel" text="{i18n>kpiTotalUsersLabel}" />
                                     <ObjectNumber id="kpiTotalUsersValue" number="{OverviewData>/totalUsers}" textAlign="Center" class="sapUiSmallMarginTop" />
                                 </VBox>
 
                                 <!-- TOTAL LOG -->
-                                <VBox id="kpiTotalLogBox" class="kpiBox kpiPurple">
+                                <VBox id="kpiTotalLogBox" class="kpiBox kpiPurple" tooltip="{i18n>viewDetail}">
                                     <core:Icon id="kpiTotalLogIcon" src="sap-icon://activity-items" size="1.5rem" />
                                     <Text id="kpiTotalLogLabel" text="{i18n>kpiTotalLogLabel}" />
                                     <ObjectNumber id="kpiTotalLogValue" number="{OverviewData>/totalLogs}" textAlign="Center" class="sapUiSmallMarginTop" />
@@ -67,21 +67,21 @@
                                 </VBox>
 
                                 <!-- FAILED LOGIN -->
-                                <VBox id="kpiFailedBox" class="kpiBox kpiRed">
+                                <VBox id="kpiFailedBox" class="kpiBox kpiRed" tooltip="{i18n>viewDetail}">
                                     <core:Icon id="kpiFailedIcon" src="sap-icon://decline" size="1.5rem" />
                                     <Text id="kpiFailedLabel" text="{i18n>kpiFailedLabel}" />
                                     <ObjectNumber id="kpiFailedValue" number="{OverviewData>/failedLogin}" textAlign="Center" class="sapUiSmallMarginTop" />
                                 </VBox>
 
                                 <!-- LOCKED USERS -->
-                                <VBox id="kpiLockedBox" class="kpiBox kpiDarkRed">
+                                <VBox id="kpiLockedBox" class="kpiBox kpiDarkRed" tooltip="{i18n>viewDetail}">
                                     <core:Icon id="kpiLockedIcon" src="sap-icon://locked" size="1.5rem" />
                                     <Text id="kpiLockedLabel" text="{i18n>kpiLockedUsersLabel}" />
                                     <ObjectNumber id="kpiLockedValue" number="{OverviewData>/lockedUsers}" textAlign="Center" class="sapUiSmallMarginTop" />
                                 </VBox>
 
                                 <!-- DUMP COUNT -->
-                                <VBox id="kpiDumpBox" class="kpiBox kpiOrange">
+                                <VBox id="kpiDumpBox" class="kpiBox kpiOrange" tooltip="{i18n>viewDetail}">
                                     <core:Icon id="kpiDumpIcon" src="sap-icon://alert" size="1.5rem" />
                                     <Text id="kpiDumpLabel" text="{i18n>kpiDumpLabel}" />
                                     <ObjectNumber id="kpiDumpValue" number="{OverviewData>/dumpCount}" textAlign="Center" class="sapUiSmallMarginTop" />
@@ -230,7 +230,7 @@
                 </Panel>
 
                 <!-- TABLE -->
-                <ui:Table id="MaiTableId" selectionMode="Single" class="sapUiLargeMarginBottom" visibleRowCount="10">
+                <ui:Table id="MaiTableId" alternateRowColors="true" selectionMode="Single" busyIndicatorDelay="1000" class="sapUiLargeMarginBottom" visibleRowCount="10">
                     <!-- BUTTON -->
                     <ui:extension>
                         <OverflowToolbar id="mainToolbarId">
@@ -296,11 +296,14 @@
                         </ui:Column>
 
                         <!-- LOGIN MESSAGE COLUMN -->
-                        <ui:Column id="columnLoginMessage" width="16rem">
+                        <ui:Column id="columnLoginMessage" width="10rem">
                             <Label id="labelLoginMessage" text="{i18n>loginMessage}" />
 
                             <ui:template>
-                                <ObjectStatus id="textLoginMessage" text="{LoginMessage}" icon="{path: 'EventId', formatter: '.formatter.formatLoginMessageIcon'}" state="{path: 'EventId', formatter: '.formatter.formatLoginMessageState'}" />
+                                <Link id="textLoginMessage" text="{
+                                    path: 'LoginMessage',
+                                    formatter: '.formatter.formatLoginMessageText'
+                                }" press="onShowLoginMessage" tooltip="{i18n>loginMessageTooltip}"/>
                             </ui:template>
                         </ui:Column>
 
@@ -332,7 +335,7 @@
                         </ui:Column>
 
                         <!-- TERMINAL COLUMN -->
-                        <ui:Column id="columnTerminal" width="7rem" sortProperty="TerminalId" tooltip="{i18n>introSort}">
+                        <ui:Column id="columnTerminal" width="12rem" sortProperty="TerminalId" tooltip="{i18n>introSort}">
                             <Label id="labelTerminal" text="{i18n>terminalId}" />
 
                             <ui:template>

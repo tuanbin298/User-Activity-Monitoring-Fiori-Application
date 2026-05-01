@@ -1,0 +1,52 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:ui="sap.ui.table">
+    <Dialog id="logFailDialog" title="{i18n>titalLogFailDialog}" contentWidth="900px" contentHeight="500px" resizable="true" draggable="true">
+        <content>
+            <ui:TreeTable id="logFailTreeTable" rows="{
+                    path: 'logFailData>/',
+                    parameters: {
+                        arrayNames: ['children']
+                    }
+                }" selectionMode="None" visibleRowCount="10" expandFirstLevel="true">
+
+                <ui:columns>
+                    <!-- Username -->
+                    <ui:Column id="colUsernameLogDetail" width="200px">
+                        <Label id="lblUsernameLogDetail" text="{i18n>username}" />
+
+                        <ui:template>
+                            <Text id="txtUsernameLogDetail" text="{logFailData>Username}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <!-- Count -->
+                    <ui:Column id="colCountLogDetail" width="100px">
+                        <Label id="lblCountLogDetail" text="{i18n>count}" />
+
+                        <ui:template>
+                            <ObjectNumber id="txtCountLogDetail" number="{logFailData>Count}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <!-- Message -->
+                    <ui:Column id="colMessage" width="600px">
+                        <Label id="lblMessage" text="{i18n>loginMessage}" />
+
+                        <ui:template>
+                            <Text id="txtMessage" text="{logFailData>Message}" wrapping="true" class="{
+                                    = ${logFailData>Message}
+                                    ? 'messageText'
+                                    : ''
+                                }" />
+                        </ui:template>
+                    </ui:Column>
+                </ui:columns>
+            </ui:TreeTable>
+        </content>
+
+        <endButton>
+            <Button id="btnCloseDialog" text="Close" press=".onCloseLogFailDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

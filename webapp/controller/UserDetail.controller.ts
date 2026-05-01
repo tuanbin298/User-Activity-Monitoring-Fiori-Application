@@ -21,6 +21,7 @@ import Input from "sap/m/Input";
 import Spreadsheet from "sap/ui/export/Spreadsheet";
 import MessageBox from "sap/m/MessageBox";
 import BaseService from "useractivitymonitorapplication/services/BaseService";
+import OverviewService from "useractivitymonitorapplication/services/OverviewService";
 
 export default class UserDetail extends BaseController {
   public formatter = Formatter;
@@ -42,7 +43,9 @@ export default class UserDetail extends BaseController {
 
     const oRouter = (this as any).getAppComponent().getRouter();
     if (oRouter) {
-      oRouter.getRoute("UserDetail").attachPatternMatched(this._onObjectMatched, this);
+      oRouter
+        .getRoute("UserDetail")
+        .attachPatternMatched(this._onObjectMatched, this);
     }
   }
 
@@ -91,7 +94,13 @@ export default class UserDetail extends BaseController {
   // Call Odata - Load data
   // =================================================
   private async _loadAllData(username: string): Promise<void> {
-    await Promise.all([this._loadUserDetail(username), this._loadAuthTable(username), this._loadAuthChart(username), this._loadActivityTable(username), this._loadActivityChart(username)]);
+    await Promise.all([
+      this._loadUserDetail(username),
+      this._loadAuthTable(username),
+      this._loadAuthChart(username),
+      this._loadActivityTable(username),
+      this._loadActivityChart(username),
+    ]);
 
     await this.applyAuthFilters();
     await this.applyActFilters();
@@ -108,7 +117,9 @@ export default class UserDetail extends BaseController {
     if (!oView || !username) return;
 
     try {
-      const [userDetailData] = await Promise.all([UserDetailService.getAuthDetailData(oModel, aFilters)]);
+      const [userDetailData] = await Promise.all([
+        UserDetailService.getAuthDetailData(oModel, aFilters),
+      ]);
 
       // Call fn getAuthDetailData
       const oDetailModel = new JSONModel(userDetailData[0].getObject());
@@ -121,11 +132,31 @@ export default class UserDetail extends BaseController {
   // =================================================
   // Get data for Authenticate Table
   // =================================================
-  private _loadAuthTable(username: string): void {
+  private async _loadAuthTable(username: string): Promise<void> {
     const oTable = this.byId("AuthTableId") as Table;
+    const oModel = this.getAppComponent().getModel() as ODataModel;
+
+    // Filter globlal date
+    const aGlobalFilters = this.getGlobalDateFilter();
     const aFilters = [new Filter("Username", FilterOperator.EQ, username)];
 
+    const userAuthLogFilters = [...aGlobalFilters, ...aFilters];
+
     AuthService.bindAuthenticateTable(oTable, aFilters);
+
+    // Number
+    const aDataNumber = await OverviewService.getTotalAuthLogs(
+      oModel,
+      userAuthLogFilters,
+    );
+
+    const oView = this.getView();
+    oView?.setModel(
+      new JSONModel({
+        totalLogs: aDataNumber.numberData,
+      }),
+      "AuthLogSummary",
+    );
   }
 
   // ===========================================
@@ -164,7 +195,9 @@ export default class UserDetail extends BaseController {
     }
 
     // Filter Status
-    const sStatus = (this.byId("AuthStatusSelectId") as Select).getSelectedKey();
+    const sStatus = (
+      this.byId("AuthStatusSelectId") as Select
+    ).getSelectedKey();
     if (sStatus) {
       aFilters.push(new Filter("LoginResult", FilterOperator.EQ, sStatus));
     }
@@ -182,12 +215,17 @@ export default class UserDetail extends BaseController {
 
         const sDate = oFormatter.format(oDate);
 
-        this._aAuthDateFilters = [new Filter("LoginDate", FilterOperator.EQ, sDate)];
+        this._aAuthDateFilters = [
+          new Filter("LoginDate", FilterOperator.EQ, sDate),
+        ];
       }
     }
 
     // Filter date or Global filter date
-    const aDateFilters = this._aAuthDateFilters.length > 0 ? this._aAuthDateFilters : this.getGlobalDateFilter();
+    const aDateFilters =
+      this._aAuthDateFilters.length > 0
+        ? this._aAuthDateFilters
+        : this.getGlobalDateFilter();
 
     return [...aDateFilters, ...aFilters];
   }
@@ -202,7 +240,10 @@ export default class UserDetail extends BaseController {
     if (!oView || !username) return;
 
     // Filter
-    const aFilters = [new Filter("Username", FilterOperator.EQ, username), ...this.getGlobalDateFilter()];
+    const aFilters = [
+      new Filter("Username", FilterOperator.EQ, username),
+      ...this.getGlobalDateFilter(),
+    ];
 
     try {
       const [loginResultData, loginPerDays] = await Promise.all([
@@ -277,7 +318,9 @@ export default class UserDetail extends BaseController {
     }
 
     // Filter Act Type
-    const sStatus = (this.byId("ActivityTypeSelectId") as Select).getSelectedKey();
+    const sStatus = (
+      this.byId("ActivityTypeSelectId") as Select
+    ).getSelectedKey();
     if (sStatus) {
       aFilters.push(new Filter("ActType", FilterOperator.EQ, sStatus));
     }
@@ -301,12 +344,17 @@ export default class UserDetail extends BaseController {
 
         const sDate = oFormatter.format(oDate);
 
-        this._aActDateFilters = [new Filter("ActDate", FilterOperator.EQ, sDate)];
+        this._aActDateFilters = [
+          new Filter("ActDate", FilterOperator.EQ, sDate),
+        ];
       }
     }
 
     // Filter date or Global filter date
-    const aDateFilters = this._aActDateFilters.length > 0 ? this._aActDateFilters : aGlobalDateFilter;
+    const aDateFilters =
+      this._aActDateFilters.length > 0
+        ? this._aActDateFilters
+        : aGlobalDateFilter;
 
     return [...aDateFilters, ...aFilters];
   }
@@ -383,37 +431,42 @@ export default class UserDetail extends BaseController {
   // Open TCode Search Help
   // ===========================================
   public async onUserSearchHelpTCode(): Promise<void> {
-    const oModel = this.getAppComponent().getModel() as ODataModel;
-    // Global date
-    const { from, to } = this.getGlobalDateRange();
-    const aGlobalDateFilter = [
-      new Filter({
-        path: "ActDate",
-        operator: FilterOperator.BT,
-        value1: from,
-        value2: to,
-      }),
-      new Filter("Username", FilterOperator.EQ, this._sUsername),
-    ];
+    await this.withBusy(async () => {
+      const oModel = this.getAppComponent().getModel() as ODataModel;
+      // Global date
+      const { from, to } = this.getGlobalDateRange();
+      const aGlobalDateFilter = [
+        new Filter({
+          path: "ActDate",
+          operator: FilterOperator.BT,
+          value1: from,
+          value2: to,
+        }),
+        new Filter("Username", FilterOperator.EQ, this._sUsername),
+      ];
 
-    // Call fn getSHTCodeData
-    const aTCode = await SearchHelpService.getSHTCodeData(oModel, aGlobalDateFilter);
+      // Call fn getSHTCodeData
+      const aTCode = await SearchHelpService.getSHTCodeData(
+        oModel,
+        aGlobalDateFilter,
+      );
 
-    const oTCodeModel = new JSONModel(aTCode);
-    this.getView()?.setModel(oTCodeModel, "TCodeSeachHelp");
+      const oTCodeModel = new JSONModel(aTCode);
+      this.getView()?.setModel(oTCodeModel, "TCodeSeachHelp");
 
-    if (!this._oTCodeSearchHelpDialog) {
-      // Load fragment
-      this._oTCodeSearchHelpDialog = (await Fragment.load({
-        id: this.getView()?.getId(),
-        name: "useractivitymonitorapplication.fragment.TCodeSearchHelp",
-        controller: this,
-      })) as Dialog;
+      if (!this._oTCodeSearchHelpDialog) {
+        // Load fragment
+        this._oTCodeSearchHelpDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.TCodeSearchHelp",
+          controller: this,
+        })) as Dialog;
 
-      this.getView()?.addDependent(this._oTCodeSearchHelpDialog);
-    }
+        this.getView()?.addDependent(this._oTCodeSearchHelpDialog);
+      }
 
-    this._oTCodeSearchHelpDialog.open();
+      this._oTCodeSearchHelpDialog.open();
+    });
   }
 
   public onCloseTCodeDialog(): void {
@@ -531,7 +584,9 @@ export default class UserDetail extends BaseController {
     const aColumns = oTable.getColumns();
 
     // Remove Navigator column
-    const aFilteredColumns = aColumns.filter((oColumn: any) => !oColumn.getId().includes("AuthNavigateColumnId"));
+    const aFilteredColumns = aColumns.filter(
+      (oColumn: any) => !oColumn.getId().includes("AuthNavigateColumnId"),
+    );
 
     // Create new array contain every column object
     const aColumnData = aFilteredColumns.map((oColumn: any) => {
@@ -714,7 +769,9 @@ export default class UserDetail extends BaseController {
     const aColumns = oTable.getColumns();
 
     // Get model and property
-    const oModel = this.getView()?.getModel("ActivityColumnsModel") as JSONModel;
+    const oModel = this.getView()?.getModel(
+      "ActivityColumnsModel",
+    ) as JSONModel;
     const aData = oModel.getProperty("/columns");
 
     // Set visible for column
@@ -731,5 +788,22 @@ export default class UserDetail extends BaseController {
 
   public onActCancelViewSettings(): void {
     this._oActViewSettingsDialog?.close();
+  }
+
+  // ===========================================
+  // Show message detail
+  // ===========================================
+  public onShowLoginMessage(oEvent: any): void {
+    const oSource = oEvent.getSource();
+    const oContext = oSource.getBindingContext();
+
+    if (!oContext) return;
+
+    const sMessage = oContext.getProperty("LoginMessage");
+    const sEventId = oContext.getProperty("EventId");
+
+    const sState = this.formatter.formatLoginMessageState(sEventId);
+
+    this.showMessageByState(sMessage, sState, "Login Message");
   }
 }

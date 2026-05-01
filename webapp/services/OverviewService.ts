@@ -39,7 +39,14 @@ export default class OverviewService {
   static async getTotalAuthLogs(
     oModel: ODataModel,
     aFilters: Filter[],
-  ): Promise<number> {
+  ): Promise<{
+    numberData: number;
+    arrayData: any[];
+    arrayLogFail: any[];
+  }> {
+    const oLogFail: Record<string, any> = {};
+    const count = 0 as number;
+
     try {
       const oBinding = oModel.bindList(
         "/authenticate_data",
@@ -52,7 +59,59 @@ export default class OverviewService {
       // Executes the OData call
       await oBinding.requestContexts();
 
-      return oBinding.getLength();
+      const aData = await BaseService._fetchAllData(oBinding);
+
+      // Group by
+      aData.forEach((oContext) => {
+        const key = oContext.Username;
+        const message = oContext.LoginMessage;
+
+        if (!oLogFail[key]) {
+          oLogFail[key] = {
+            Messages: new Set<string>(),
+            Count: count,
+            Users: oContext.Username,
+            EventId: oContext.EventId,
+          };
+        }
+
+        oLogFail[key].Count += 1;
+
+        if (message) {
+          oLogFail[key].Messages.add(message);
+        }
+      });
+
+      //  Convert into array
+      let aLogFailData = Object.values(oLogFail).map((item: any) => {
+        const messagesArray = Array.from(item.Messages);
+
+        return {
+          Username: item.Users,
+          Count: item.Count,
+          Messages: messagesArray,
+          EventId: item.EventId,
+        };
+      });
+
+      // Sort data
+      aLogFailData.sort((a: any, b: any) => b.Count - a.Count);
+
+      // Edit data to tree table
+      const aTreeData = aLogFailData.map((user) => ({
+        Username: user.Username,
+        Count: user.Count,
+        children: user.Messages.map((msg) => ({
+          Message: msg,
+        })),
+      }));
+
+      // debugger;
+      return {
+        numberData: aData.length || 0,
+        arrayData: aData,
+        arrayLogFail: aTreeData,
+      };
     } catch (error) {
       throw new Error("Failed to load total authentication logs");
     }
@@ -65,7 +124,13 @@ export default class OverviewService {
   static async getTotalDump(
     oModel: ODataModel,
     aFilters: Filter[],
-  ): Promise<number> {
+  ): Promise<{
+    numberData: number;
+    arrayData: any[];
+  }> {
+    const oDumpData: Record<string, any> = {};
+    const count = 0 as number;
+
     try {
       const oBinding = oModel.bindList(
         "/activity_data",
@@ -78,7 +143,54 @@ export default class OverviewService {
       // Executes the OData call
       await oBinding.requestContexts();
 
-      return oBinding.getLength();
+      const aData = await BaseService._fetchAllData(oBinding);
+
+      // Group by
+      aData.forEach((oContext) => {
+        const key = oContext.MessageText;
+        const username = oContext.Username;
+        const actDate = oContext.ActDate;
+
+        if (!oDumpData[key]) {
+          oDumpData[key] = {
+            MessageText: oContext.MessageText,
+            Count: count,
+            Users: new Set<string>(),
+            Dates: new Set<string>(),
+          };
+        }
+
+        oDumpData[key].Count += 1;
+
+        if (username) {
+          oDumpData[key].Users.add(username);
+        }
+
+        if (actDate) {
+          oDumpData[key].Dates.add(actDate);
+        }
+      });
+
+      //  Convert into array
+      let aDumpData = Object.values(oDumpData).map((item: any) => {
+        const usersArray = Array.from(item.Users);
+        const dates = Array.from(item.Dates);
+
+        return {
+          MessageText: item.MessageText,
+          Count: item.Count,
+          Username: usersArray.join(" - "),
+          Dates: dates.join(" | "),
+        };
+      });
+
+      // Sort data
+      aDumpData.sort((a: any, b: any) => b.Count - a.Count);
+
+      return {
+        numberData: aData.length || 0,
+        arrayData: aDumpData,
+      };
     } catch (error) {
       throw new Error("Failed to load total dump logs");
     }

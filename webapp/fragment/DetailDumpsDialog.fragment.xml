@@ -1,0 +1,85 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:ui="sap.ui.table">
+
+    <Dialog id="dumpDialog" title="Dump Analysis" contentWidth="900px" contentHeight="650px" draggable="true" resizable="true" class="sapUiContentPadding">
+
+        <VBox id="dumpVBox" width="100%" height="100%" renderType="Bare">
+            <Panel id="panelDump" width="100%" headerText="{i18n>chart}" expandable="true" expanded="true" class="customFilterPanel sapUiSmallMarginBottom">
+                <!-- ================= CHART ================= -->
+                <viz:VizFrame id="dumpTreemapChart" vizType="treemap" width="100%" height="550px" vizProperties="{ title: { visible: true, text: 'Analysis Dump Errors' }, plotArea: { gap: 4, dataLabel: { visible: true, style: { fontSize: '12px' } }, colorPalette: [ '#5B8FF9', '#61DDAA', '#65789B', '#F6BD16', '#7262FD' ] }, legend: { visible: true }, tooltip: { visible: true } }">                    <!-- DATA -->
+                    <viz:dataset>
+                        <viz.data:FlattenedDataset id="dumpDialogDataset" data="{dumpDialogData>/}">
+                            <!-- DIMENSION -->
+                            <viz.data:dimensions>
+                                <viz.data:DimensionDefinition id="dumpDimension" name="Error" value="{dumpDialogData>MessageText}" />
+                            </viz.data:dimensions>
+
+                            <!-- MEASURE -->
+                            <viz.data:measures>
+                                <viz.data:MeasureDefinition id="dumpMeasure" name="Count" value="{dumpDialogData>Count}" />
+                            </viz.data:measures>
+                        </viz.data:FlattenedDataset>
+                    </viz:dataset>
+
+                    <!-- FEEDS -->
+                    <viz:feeds>
+                        <!-- TEXT -->
+                        <viz.feeds:FeedItem id="dumpFeedTitle" uid="title" type="Dimension" values="Error" />
+
+                        <!-- SIZE -->
+                        <viz.feeds:FeedItem id="dumpFeedWeight" uid="weight" type="Measure" values="Count" />
+
+                        <!-- COLOR (OPTIONAL) -->
+                        <viz.feeds:FeedItem id="dumpFeedColor" uid="color" type="Measure" values="Count" />
+                    </viz:feeds>
+                </viz:VizFrame>
+            </Panel>
+
+            <!-- ================= TABLE ================= -->
+            <ui:Table alternateRowColors="true"  busyIndicatorDelay="1000" id="dumpTable" rows="{dumpDialogData>/}" visibleRowCount="7" selectionMode="Single" >
+                <ui:columns>
+                    <!-- USERNAME -->
+                    <ui:Column id="colUsername" width="7rem">
+                        <Label id="lblUsername" text="{i18n>username}" />
+                        <ui:template>
+                            <Text id="txtUsername" text="{dumpDialogData>Username}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <!-- DATE -->
+                    <ui:Column id="colDate" width="14rem">
+                        <Label id="lblDate" text="{i18n>activityDate}" />
+                        <ui:template>
+                            <Text id="txtDate" text="{dumpDialogData>Dates}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <!-- COUNT -->
+                    <ui:Column id="colCount" width="4rem" sortProperty="Count">
+                        <Label id="lblCount" text="{i18n>count}" />
+                        <ui:template>
+                            <Text id="txtCount" text="{dumpDialogData>Count}" />
+                        </ui:template>
+                    </ui:Column>
+
+                    <!-- ERROR -->
+                    <ui:Column id="colError" width="25rem">
+                        <Label id="lblError" text="{i18n>dumpMsg}" />
+                        <ui:template>
+                            <Text id="txtError" text="{dumpDialogData>MessageText}" wrapping="true"/>
+                        </ui:template>
+                    </ui:Column>
+                </ui:columns>
+            </ui:Table>
+        </VBox>
+
+        <!-- FOOTER -->
+        <endButton>
+            <Button id="btnCloseDumpDialog" text="Close" press="onCloseDumpDialog"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

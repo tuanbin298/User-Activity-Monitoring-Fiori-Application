@@ -20,6 +20,7 @@ import MessageBox from "sap/m/MessageBox";
 import LoginResultService from "useractivitymonitorapplication/services/LoginResultService";
 import TCodeService from "useractivitymonitorapplication/services/TCodeService";
 import DumpService from "useractivitymonitorapplication/services/DumpService";
+import VBox from "sap/m/VBox";
 
 /**
  * @namespace useractivitymonitorapplication.controller.main
@@ -30,6 +31,10 @@ export default class Main extends BaseController {
   private _timer: any;
   private _oUserSearchHelpDialog: Dialog | null = null;
   private _oViewSettingsDialog: Dialog | null = null;
+  private _oCommomListDialog: Dialog | null = null;
+  private _oDumpListDialog: Dialog | null = null;
+  private _oLogFailDialog: Dialog | null = null;
+
   private _aUserDateFilters: Filter[] = [];
 
   // ===========================================
@@ -83,6 +88,36 @@ export default class Main extends BaseController {
 
     oDatePicker.setMinDate(new Date(from));
     oDatePicker.setMaxDate(new Date(to));
+
+    // Set btn for card user locked
+    const oLockedBox = this.byId("kpiLockedBox") as VBox;
+    if (oLockedBox) {
+      oLockedBox.attachBrowserEvent("click", this.onShowLockedUsers.bind(this));
+    }
+
+    // Set btn for total log
+    const oTotalLogBox = this.byId("kpiTotalLogBox") as VBox;
+    if (oTotalLogBox) {
+      oTotalLogBox.attachBrowserEvent("click", this.onScrollToTable.bind(this));
+    }
+
+    // Set btn for card total
+    const oUsersBox = this.byId("kpiTotalUsersBox") as VBox;
+    if (oUsersBox) {
+      oUsersBox.attachBrowserEvent("click", this.onShowTotalUsers.bind(this));
+    }
+
+    // Set btn for card dump
+    const oDumpsBox = this.byId("kpiDumpBox") as VBox;
+    if (oDumpsBox) {
+      oDumpsBox.attachBrowserEvent("click", this.onShowTotalDump.bind(this));
+    }
+
+    // Set btn for login fail
+    const oLogFailBox = this.byId("kpiFailedBox") as VBox;
+    if (oLogFailBox) {
+      oLogFailBox.attachBrowserEvent("click", this.onShowLogFail.bind(this));
+    }
   }
 
   // ====================================================
@@ -176,39 +211,44 @@ export default class Main extends BaseController {
     ];
 
     try {
-      const [
-        totalUsers,
-        totalLogs,
-        lockedUsers,
-        loginResultData,
-        totalDumps,
-        systemInfo,
-      ] = await Promise.all([
-        // Call fn getTotalUsers
-        OverviewService.getTotalUsers(oModel, aFilters),
+      await this.withBusy(async () => {
+        const [
+          totalUsers,
+          totalLogs,
+          lockedUsers,
+          loginResultData,
+          totalDumps,
+          systemInfo,
+        ] = await Promise.all([
+          // Call fn getTotalUsers
+          OverviewService.getTotalUsers(oModel, aFilters),
 
-        // Call fn getTotalAuthLogs
-        OverviewService.getTotalAuthLogs(oModel, aFilters),
-        OverviewService.getTotalAuthLogs(oModel, aLockedFilters),
+          // Call fn getTotalAuthLogs
+          OverviewService.getTotalAuthLogs(oModel, aFilters),
+          OverviewService.getTotalAuthLogs(oModel, aLockedFilters),
 
-        // Call fn getLoginResult
-        LoginResultService.getLoginResult(oModel, aFilters),
+          // Call fn getLoginResult
+          LoginResultService.getLoginResult(oModel, aFilters),
 
-        // Call fn getTotalDump
-        OverviewService.getTotalDump(oModel, aDumpFilters),
+          // Call fn getTotalDump
+          OverviewService.getTotalDump(oModel, aDumpFilters),
 
-        // Call fn getSystemInfo
-        OverviewService.getSystemInfo(oModel),
-      ]);
+          // Call fn getSystemInfo
+          OverviewService.getSystemInfo(oModel),
+        ]);
 
-      // Set property
-      oOverviewModel.setProperty("/totalUsers", totalUsers);
-      oOverviewModel.setProperty("/totalLogs", totalLogs);
-      oOverviewModel.setProperty("/successLogin", loginResultData.successLogin);
-      oOverviewModel.setProperty("/failedLogin", loginResultData.failedLogin);
-      oOverviewModel.setProperty("/lockedUsers", lockedUsers);
-      oOverviewModel.setProperty("/dumpCount", totalDumps);
-      oOverviewModel.setProperty("/systemInformation", systemInfo);
+        // Set property
+        oOverviewModel.setProperty("/totalUsers", totalUsers);
+        oOverviewModel.setProperty("/totalLogs", totalLogs.numberData);
+        oOverviewModel.setProperty(
+          "/successLogin",
+          loginResultData.successLogin,
+        );
+        oOverviewModel.setProperty("/failedLogin", loginResultData.failedLogin);
+        oOverviewModel.setProperty("/lockedUsers", lockedUsers.numberData);
+        oOverviewModel.setProperty("/dumpCount", totalDumps.numberData);
+        oOverviewModel.setProperty("/systemInformation", systemInfo);
+      });
     } catch (error: any) {
       this.showError(error.message || "Failed to load overview data");
 
@@ -264,23 +304,28 @@ export default class Main extends BaseController {
     const oModel = this.getAppComponent().getModel() as ODataModel;
     const aFilters = this.getGlobalDateFilter();
 
-    // Call fn getSHUsernameData
-    const aUsers = await SearchHelpService.getSHUsernameData(oModel, aFilters);
-    const oUserModel = new JSONModel(aUsers);
-    this.getView()?.setModel(oUserModel, "userSeachHelp");
+    await this.withBusy(async () => {
+      // Call fn getSHUsernameData
+      const aUsers = await SearchHelpService.getSHUsernameData(
+        oModel,
+        aFilters,
+      );
+      const oUserModel = new JSONModel(aUsers);
+      this.getView()?.setModel(oUserModel, "userSeachHelp");
 
-    if (!this._oUserSearchHelpDialog) {
-      // Load fragment
-      this._oUserSearchHelpDialog = (await Fragment.load({
-        id: this.getView()?.getId(),
-        name: "useractivitymonitorapplication.fragment.UserSearchHelp",
-        controller: this,
-      })) as Dialog;
+      if (!this._oUserSearchHelpDialog) {
+        // Load fragment
+        this._oUserSearchHelpDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.UserSearchHelp",
+          controller: this,
+        })) as Dialog;
 
-      this.getView()?.addDependent(this._oUserSearchHelpDialog);
-    }
+        this.getView()?.addDependent(this._oUserSearchHelpDialog);
+      }
 
-    this._oUserSearchHelpDialog.open();
+      this._oUserSearchHelpDialog.open();
+    });
   }
 
   public onCloseUserDialog(): void {
@@ -401,22 +446,24 @@ export default class Main extends BaseController {
   // Open fragment view setting
   // ===========================================
   public async onOpenViewSettings(): Promise<void> {
-    if (!this._oViewSettingsDialog) {
-      // Load fragment
-      this._oViewSettingsDialog = (await Fragment.load({
-        id: this.getView()?.getId(),
-        name: "useractivitymonitorapplication.fragment.AuthTableViewSetting",
-        controller: this,
-      })) as Dialog;
+    await this.withBusy(async () => {
+      if (!this._oViewSettingsDialog) {
+        // Load fragment
+        this._oViewSettingsDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.AuthTableViewSetting",
+          controller: this,
+        })) as Dialog;
 
-      // Add Fragment into view
-      this.getView()?.addDependent(this._oViewSettingsDialog);
+        // Add Fragment into view
+        this.getView()?.addDependent(this._oViewSettingsDialog);
 
-      this.initializeColumnModel();
-    }
+        this.initializeColumnModel();
+      }
 
-    // Open
-    this._oViewSettingsDialog.open();
+      // Open
+      this._oViewSettingsDialog.open();
+    });
   }
 
   // ===========================================
@@ -578,6 +625,203 @@ export default class Main extends BaseController {
       if (oRouter) {
         oRouter.navTo("UserDetail", {
           username: sUsername,
+        });
+      }
+    }
+  }
+
+  // ===========================================
+  // Show message detail
+  // ===========================================
+  public onShowLoginMessage(oEvent: any): void {
+    const oSource = oEvent.getSource();
+    const oContext = oSource.getBindingContext();
+
+    if (!oContext) return;
+
+    const sMessage = oContext.getProperty("LoginMessage");
+    const sEventId = oContext.getProperty("EventId");
+
+    const sState = this.formatter.formatLoginMessageState(sEventId);
+
+    this.showMessageByState(sMessage, sState, "Login Message");
+  }
+
+  // ===========================================
+  // Show fragment lock user
+  // ===========================================
+  public async onShowLockedUsers(): Promise<void> {
+    await this.withBusy(async () => {
+      const oModel = this.getAppComponent().getModel() as ODataModel;
+      // Filter globlal date
+      const aFilters = this.getGlobalDateFilter();
+      // Filter locked user
+      const aLockedFilters = [
+        ...aFilters,
+        new Filter("EventId", FilterOperator.EQ, "AUM"),
+      ];
+
+      const data = await OverviewService.getTotalAuthLogs(
+        oModel,
+        aLockedFilters,
+      );
+
+      const oDialogModel = new JSONModel({
+        title: "Locked Users",
+        items: data.arrayData,
+      });
+
+      if (!this._oCommomListDialog) {
+        // Load fragment
+        this._oCommomListDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.CommonListDialog",
+          controller: this,
+        })) as Dialog;
+
+        this.getView()?.addDependent(this._oCommomListDialog);
+      }
+
+      this._oCommomListDialog.setModel(oDialogModel, "dialogModel");
+
+      this._oCommomListDialog?.open();
+    });
+  }
+
+  public onCloseCommonDialog(): void {
+    this._oCommomListDialog?.close();
+  }
+
+  // ===========================================
+  // Show fragment total user
+  // ===========================================
+  public async onShowTotalUsers(): Promise<void> {
+    await this.withBusy(async () => {
+      const oModel = this.getAppComponent().getModel() as ODataModel;
+
+      // Filter globlal date
+      const aFilters = this.getGlobalDateFilter();
+
+      const data = await OverviewService.getTotalAuthLogs(oModel, aFilters);
+
+      const oDialogModel = new JSONModel({
+        title: "Total Users",
+        items: data.arrayData,
+      });
+
+      if (!this._oCommomListDialog) {
+        // Load fragment
+        this._oCommomListDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.CommonListDialog",
+          controller: this,
+        })) as Dialog;
+
+        this.getView()?.addDependent(this._oCommomListDialog);
+      }
+
+      this._oCommomListDialog.setModel(oDialogModel, "dialogModel");
+
+      this._oCommomListDialog?.open();
+    });
+  }
+
+  // ===========================================
+  // Show fragment total dump
+  // ===========================================
+  public async onShowTotalDump(): Promise<void> {
+    await this.withBusy(async () => {
+      const oModel = this.getAppComponent().getModel() as ODataModel;
+
+      // Filter globlal date
+      const { from, to } = this.getGlobalDateRange();
+
+      // Filter dump count
+      const aDumpFilters = [
+        new Filter("ActDate", FilterOperator.BT, from, to),
+        new Filter("ActType", FilterOperator.EQ, "DUMP"),
+      ];
+
+      const data = await OverviewService.getTotalDump(oModel, aDumpFilters);
+      const oDumpDataModel = new JSONModel(data.arrayData);
+
+      if (!this._oDumpListDialog) {
+        // Load fragment
+        this._oDumpListDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.DetailDumpsDialog",
+          controller: this,
+        })) as Dialog;
+
+        this.getView()?.addDependent(this._oDumpListDialog);
+      }
+
+      this._oDumpListDialog.setModel(oDumpDataModel, "dumpDialogData");
+
+      this._oDumpListDialog?.open();
+    });
+  }
+
+  public onCloseDumpDialog(): void {
+    this._oDumpListDialog?.close();
+  }
+
+  // ===========================================
+  // Show fragment login fail
+  // ===========================================
+  public async onShowLogFail(): Promise<void> {
+    await this.withBusy(async () => {
+      const oModel = this.getAppComponent().getModel() as ODataModel;
+
+      // Filter globlal date
+      const aFilters = this.getGlobalDateFilter();
+
+      // Filter dump count
+      const aLogFailFilters = [
+        ...aFilters,
+        new Filter("LoginResult", FilterOperator.EQ, "FAIL"),
+      ];
+
+      const data = await OverviewService.getTotalAuthLogs(
+        oModel,
+        aLogFailFilters,
+      );
+      const oLogFailDataModel = new JSONModel(data.arrayLogFail);
+
+      if (!this._oLogFailDialog) {
+        // Load fragment
+        this._oLogFailDialog = (await Fragment.load({
+          id: this.getView()?.getId(),
+          name: "useractivitymonitorapplication.fragment.DetailLogFailDialog",
+          controller: this,
+        })) as Dialog;
+
+        this.getView()?.addDependent(this._oLogFailDialog);
+      }
+
+      this._oLogFailDialog.setModel(oLogFailDataModel, "logFailData");
+
+      this._oLogFailDialog?.open();
+    });
+  }
+
+  // ===========================================
+  // Scroll to table
+  // ===========================================
+  public onCloseLogFailDialog(): void {
+    this._oLogFailDialog?.close();
+  }
+
+  public onScrollToTable(): void {
+    const oTable = this.byId("MaiTableId");
+
+    if (oTable) {
+      const oDomRef = oTable.getDomRef();
+
+      if (oDomRef) {
+        oDomRef.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
         });
       }
     }

@@ -1,0 +1,13 @@
+<core:FragmentDefinition xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog id="commonListDialog" title="{dialogModel>/title}" contentWidth="400px" contentHeight="300px" draggable="true" resizable="true">
+        <List id="commonList" items="{dialogModel>/items}">
+            <StandardListItem id="StandardCommonListItem" title="{dialogModel>Username}" />
+        </List>
+
+        <endButton>
+            <Button id="btnCloseId" text="Close" press="onCloseCommonDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -81,4 +81,34 @@ export default class BaseController extends Controller {
   public showSuccess(msg: string) {
     MessageToast.show(msg);
   }
+
+  // =========================
+  // PopUp
+  // =========================
+  public showMessageByState(
+    sMessage: string,
+    sState: string,
+    sTitle?: string,
+  ): void {
+    const sFinalMessage = sMessage || "No message available";
+    const sFinalTitle = sTitle || "Notification";
+
+    switch (sState) {
+      case "Success":
+        MessageBox.success(sFinalMessage, {
+          title: sFinalTitle,
+        });
+        break;
+      case "Error":
+        MessageBox.error(sFinalMessage, {
+          title: sFinalTitle,
+        });
+        break;
+      default:
+        MessageBox.information(sFinalMessage, {
+          title: sFinalTitle,
+        });
+        break;
+    }
+  }
 }

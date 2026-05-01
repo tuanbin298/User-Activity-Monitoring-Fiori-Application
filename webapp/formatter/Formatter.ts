@@ -124,6 +124,29 @@ const Formatter = {
 
     return `${title} (${oDateFormat.format(fromDate)} - ${oDateFormat.format(toDate)})`;
   },
+
+  // Format text for message
+  formatLoginMessageText(sMessage: string): string {
+    if (!sMessage) {
+      return "Message";
+    }
+
+    const sLower = sMessage.toLowerCase();
+
+    if (sLower.includes("success")) {
+      return "Message Success";
+    }
+
+    if (sLower.includes("failed") || sLower.includes("fail")) {
+      return "Message Failed";
+    }
+
+    if (sLower.includes("locked")) {
+      return "User Locked";
+    }
+
+    return "Message";
+  },
 };
 
 export default Formatter;
