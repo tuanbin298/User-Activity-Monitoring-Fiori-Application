@@ -11,7 +11,10 @@ export default class OverviewService {
   static async getTotalUsers(
     oModel: ODataModel,
     aFilters: Filter[],
-  ): Promise<number> {
+  ): Promise<{
+    numberUser: number;
+    arrayUser: any[];
+  }> {
     try {
       const oBinding = oModel.bindList(
         "/searchhelp_username_data",
@@ -24,9 +27,19 @@ export default class OverviewService {
       const aData = await BaseService._fetchAllData(oBinding);
 
       // Group unique user
-      const uniqueUsers = new Set(aData.map((item) => item.Username));
+      const uniqueUsers = [...new Set(aData.map((item) => item.Username))];
 
-      return uniqueUsers.size;
+      // Add key
+      const aDataUser = uniqueUsers.map((user) => {
+        return {
+          Username: user,
+        };
+      });
+
+      return {
+        numberUser: uniqueUsers.length,
+        arrayUser: aDataUser,
+      };
     } catch (error) {
       throw new Error("Failed to load total users");
     }

@@ -238,7 +238,7 @@ export default class Main extends BaseController {
         ]);
 
         // Set property
-        oOverviewModel.setProperty("/totalUsers", totalUsers);
+        oOverviewModel.setProperty("/totalUsers", totalUsers.numberUser);
         oOverviewModel.setProperty("/totalLogs", totalLogs.numberData);
         oOverviewModel.setProperty(
           "/successLogin",
@@ -702,11 +702,11 @@ export default class Main extends BaseController {
       // Filter globlal date
       const aFilters = this.getGlobalDateFilter();
 
-      const data = await OverviewService.getTotalAuthLogs(oModel, aFilters);
+      const data = await OverviewService.getTotalUsers(oModel, aFilters);
 
       const oDialogModel = new JSONModel({
         title: "Total Users",
-        items: data.arrayData,
+        items: data.arrayUser,
       });
 
       if (!this._oCommomListDialog) {
