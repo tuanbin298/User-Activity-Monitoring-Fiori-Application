@@ -181,7 +181,7 @@
                                     dataLabel: { visible: true },
                                     colorPalette: ['#fa8c16']
                                 }
-                            }" vizType="bar" width="300px" height="364px">
+                            }" vizType="bar" width="350px" height="364px">
                                 <!-- Define data of chart -->
                                 <viz:dataset>
                                     <viz.data:FlattenedDataset id="barDataset" data="{dumpData>/}">

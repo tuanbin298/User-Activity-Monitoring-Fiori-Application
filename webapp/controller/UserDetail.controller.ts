@@ -122,7 +122,7 @@ export default class UserDetail extends BaseController {
       ]);
 
       // Call fn getAuthDetailData
-      const oDetailModel = new JSONModel(userDetailData[0].getObject());
+      const oDetailModel = new JSONModel(userDetailData[0]?.getObject());
       oView.setModel(oDetailModel, "UserDetailData");
     } catch (error: any) {
       this.showError(error.message || "Failed to user detail data");
