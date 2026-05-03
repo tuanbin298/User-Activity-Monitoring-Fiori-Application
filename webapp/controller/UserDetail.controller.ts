@@ -806,4 +806,22 @@ export default class UserDetail extends BaseController {
 
     this.showMessageByState(sMessage, sState, "Login Message");
   }
+
+  public onClearDate(): void {
+    const oDatePicker = this.byId("ActivityDatePickerId") as DatePicker;
+
+    if (oDatePicker) {
+      oDatePicker.setValue("");
+      oDatePicker.setDateValue(null);
+    }
+  }
+
+  public onClearAuthDate(): void {
+    const oDatePicker = this.byId("AuthDatePickerId") as DatePicker;
+
+    if (oDatePicker) {
+      oDatePicker.setValue("");
+      oDatePicker.setDateValue(null);
+    }
+  }
 }

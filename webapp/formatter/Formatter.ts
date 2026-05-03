@@ -147,6 +147,11 @@ const Formatter = {
 
     return "Message";
   },
+
+  formatShortText: function (sText: string) {
+    if (!sText) return "";
+    return sText.length > 40 ? sText.substring(0, 40) + "..." : sText;
+  },
 };
 
 export default Formatter;

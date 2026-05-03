@@ -223,9 +223,13 @@
                                             <core:Item id="AuthStatusFailedItemId" key="FAIL" text="{i18n>failed}" />
                                         </Select>
 
-                                        <!-- DATE -->
-                                        <Label id="AuthDateLabelId" text="{i18n>filterDate}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
-                                        <DatePicker id="AuthDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterAuthLoginDate" class="sapUiSmallMarginEnd" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+                                        <!-- Date -->
+                                        <HBox id="hboxAuthDelete" alignItems="Center">
+                                            <Label id="AuthDateLabelId" text="{i18n>filterDate}" class="sapUiSmallMarginBegin sapUiSmallMarginEnd" />
+                                            <DatePicker id="AuthDatePickerId" width="180px" placeholder="{i18n>selectDate}" change="onFilterAuthLoginDate" class="sapUiSmallMarginEnd" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+
+                                            <Button id="btnAuthDelete" icon="sap-icon://decline" type="Transparent" press="onClearAuthDate" />
+                                        </HBox>
                                     </Toolbar>
                                 </content>
                             </Panel>
@@ -289,8 +293,6 @@
                                                 path: 'LoginMessage',
                                                 formatter: '.formatter.formatLoginMessageText'
                                             }" press="onShowLoginMessage" tooltip="{i18n>loginMessageTooltip}"/>
-
-                                            <!-- <ObjectStatus id="AuthLoginMessageStatusId" text="{LoginMessage}" icon="{path:'EventId', formatter:'.formatter.formatLoginMessageIcon'}" state="{path:'EventId', formatter:'.formatter.formatLoginMessageState'}" /> -->
                                         </ui:template>
                                     </ui:Column>
 
@@ -407,9 +409,14 @@
                                         <Label id="ActivityTCodeLabelId" text="{i18n>tCode}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                                         <Input id="ActivityTCodeInputId" width="200px" placeholder="{i18n>tCode}" showValueHelp="true" liveChange="onSearchTCode" valueHelpRequest="onUserSearchHelpTCode" showClearIcon="true" class="sapUiSmallMarginEnd" />
 
+
                                         <!-- Date -->
-                                        <Label id="ActivityDateLabelId" text="{i18n>activityDate}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                                        <DatePicker id="ActivityDatePickerId" width="150px" placeholder="{i18n>selectDate}" change="onFilterActivity" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+                                        <HBox id="hboxDetailDelete" alignItems="Center">
+                                            <Label id="ActivityDateLabelId" text="{i18n>activityDate}" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                            <DatePicker id="ActivityDatePickerId" width="150px" placeholder="{i18n>selectDate}" change="onFilterActivity" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" />
+
+                                            <Button id="btnDetailDelete" icon="sap-icon://decline" type="Transparent" press="onClearDate" />
+                                        </HBox>
                                     </Toolbar>
                                 </Panel>
 

@@ -150,9 +150,9 @@ export default class AuthDetail extends BaseController {
     const oItem = oEvent.getParameter("listItem");
     const oContext = oItem.getBindingContext("TCodeSeachHelp");
     const oSelected = oContext?.getObject();
-
+    debugger;
     if (oSelected) {
-      (this.byId("activityTCodeFilter") as any).setValue(oSelected.TCode);
+      (this.byId("activityTCodeFilter") as any).setValue(oSelected.Tcode);
 
       this.onApplyFilters();
     }

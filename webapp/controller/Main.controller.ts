@@ -826,4 +826,13 @@ export default class Main extends BaseController {
       }
     }
   }
+
+  public onClearDate(): void {
+    const oDatePicker = this.byId("mainDatePickerId") as DatePicker;
+
+    if (oDatePicker) {
+      oDatePicker.setValue("");
+      oDatePicker.setDateValue(null);
+    }
+  }
 }
